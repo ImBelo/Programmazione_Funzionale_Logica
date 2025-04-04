@@ -1,65 +1,113 @@
 module Main where
+import qualified Data.Map as Map
+import Data.Char (digitToInt)
 data Mese = Febbraio | Marzo | Aprile
-          deriving (Eq, Enum, Bounded, Show, Read)
-type Data = (Int, Mese)
-m_greg = 24
-n_greg = 5
-calcolo_pasqua :: Int -> Data
-calcolo_pasqua anno = (giorno,mese) 
+              deriving (Eq,Ord, Enum, Bounded, Show, Read)
+data Calendario = Calendario
+  { giorno :: Int, 
+    mese :: Mese,
+    anno :: Int
+  } deriving (Show) 
+crea_data :: Int->Mese->Int->Calendario
+crea_data x Febbraio anno | x>0 && x<=(28 + fromEnum(controlla_bisestile anno)) = Calendario{giorno = x,mese = Febbraio,anno = anno}
+                          | otherwise = error $ show x ++ " il giorno deve essere tra 1-" ++ show ( 28 + fromEnum(controlla_bisestile anno)) 
+crea_data x Marzo anno    | x>0 && x<=31 = Calendario{giorno = x,mese = Marzo,anno = anno}
+                          | otherwise = error $ show x ++ " il giorno deve essere tra 1-31"  
+crea_data x Aprile anno   | x>0 && x<=30 = Calendario{giorno = x,mese = Aprile,anno = anno}
+                          | otherwise = error $ show x ++ " il giorno deve essere tra 1-30"  
+
+calcolo_pasqua :: Int -> Calendario
+calcolo_pasqua anno = crea_data giorno mese anno
   where giorno | z < 10 = z + 22
-          | otherwise = z - 9 
+               | otherwise = z - 9 
         mese | z < 10 = Marzo
-          | otherwise = Aprile
+             | otherwise = Aprile
         z = d + e 
         d = (19 * a + m_greg) `mod` 30
         e = (2*b+4*c + 6 * d + n_greg) `mod` 7
+        m_greg = 24
+        n_greg = 5
         a = anno `mod` 19
         b = anno `mod` 4
         c = anno `mod` 7
-controlla_bisestile :: Int->Bool
+controlla_bisestile :: Int -> Bool
 controlla_bisestile anno = (anno `mod` 4 == 0 && anno `mod` 100 /= 0) || (anno `mod` 400 == 0)
-calcola_martedi_giovedi_grasso :: Bool -> Data -> Data 
-calcola_martedi_giovedi_grasso False pasqua = (giorno,mese)
-                                               where 
-                                                 giorno = fst pasqua - 47
-printAsciiDate :: Data -> IO ()
-printAsciiDate giorno_mese = do
-    putStrLn $ "(" ++ show ( fst giorno_mese) ++ "," ++ show (snd giorno_mese) ++ ") in ASCII art:"
-    mapM_ putStrLn (renderDate giorno_mese)
--- Renders the complete date as ASCII art
-renderDate :: Data -> [String]
-renderDate giorno_mese =
-    [ combineRows (dayRows !! i) (monthRows !! i) | i <- [0..4] ]
-  where
-    dayDigits = splitNumber $ fst giorno_mese
-    monthDigits = splitNumber $ snd giorno_mese
-    dayRows = combineDigits dayDigits
-    monthRows = combineDigits monthDigits
-    
-    combineRows :: String -> String -> String
-    combineRows dayRow monthRow = dayRow ++ "   " ++ monthRow
 
--- Splits a number into its individual digits
-splitNumber :: Int -> [Int]
-splitNumber n
-    | n < 10 = [n]
-    | otherwise = splitNumber (n `div` 10) ++ [n `mod` 10]
+calcola_martedi_giovedi_grasso :: Bool -> Calendario -> Calendario
+calcola_martedi_giovedi_grasso _ pasqua = pasqua
 
--- Combines multiple digits horizontally
-combineDigits :: [Int] -> [String]
-combineDigits digits = foldl1 combineAll (map digitToAscii digits)
-  where
-    combineAll acc next = [ combineRows a n | (a, n) <- zip acc next ]
-    combineRows a n = a ++ " " ++ n
-
+mostra_data :: Calendario -> String
+mostra_data giorno_calendario = unlines combinedArt
+      where
+        digits = map digitToInt $ show $ giorno giorno_calendario
+        artNum1 = prendiCifreAscii (digits !! 0)
+        artNum2 = prendiCifreAscii (digits !! 1)
+        space = [" "," "," "," "," "]
+        artLetters1 = (mesiAsciiMap(mese giorno_calendario)) !! 0  
+        artLetters2 = (mesiAsciiMap(mese giorno_calendario)) !! 1  
+        artLetters3 = (mesiAsciiMap(mese giorno_calendario)) !! 2  
+        combinedArt = foldl1 (zipWith (++)) [artNum1 , artNum2 ,space , space, artLetters1 , artLetters2 , artLetters3]
+--
+--
 -- Converts a digit (0-9) to its 5x5 ASCII representation
-digitToAscii :: Int -> [String]
-digitToAscii n
-    | n >= 0 && n <= 9 = digitsAscii !! n
+prendiCifreAscii :: Int -> [String]
+prendiCifreAscii n
+    | n >= 0 && n <= 9 = cifreAscii !! n
     | otherwise = ["  ?  ", "  ?  ", "  ?  ", "  ?  ", "  ?  "]
+
+mesiAsciiMap ::Mese -> [[String]]
+mesiAsciiMap Febbraio =
+     [["*****",
+       "*    ",
+       "*****",
+       "*    ",
+       "*    "],
+      ["*****",
+       "*    ",
+       "*****",
+       "*    ",
+       "*****"],
+      ["**** ",
+       "*   *",
+       "**** ",
+       "*   *",
+       "**** "]]
+mesiAsciiMap Marzo =
+     [["*   *",
+       "* * *",
+       "*   *",
+       "*   *",
+       "*   *"],
+      [" *** ",
+       "*   *",
+       "*****",
+       "*   *",
+       "*   *"],
+      ["**** ",
+       "*   *",
+       "**** ",
+       "*  * ",
+       "*   *"]]
+mesiAsciiMap Aprile =
+     [[" *** ",
+       "*   *",
+       "*****",
+       "*   *",
+       "*   *"],
+      ["**** ",
+       "*   *",
+       "**** ",
+       "*    ",
+       "*    "],
+      ["****",
+       "*   *",
+       "**** ",
+       "*  * ",
+       "*   *"]]
+     
 -- Database di cifre ASCII 5x5
-digitsAscii :: [[String]]
-digitsAscii =
+cifreAscii :: [[String]]
+cifreAscii =
     [ -- 0
       [" *** ",
        "*   *",
@@ -124,8 +172,7 @@ digitsAscii =
 
 main :: IO ()
 main = do
-  printAsciiDate(calcolo_pasqua 2003)
-  printAsciiDate(calcolo_pasqua 2004)
-  printAsciiDate(calcolo_pasqua 2005)
-  printAsciiDate(calcolo_pasqua 2006)
-  printAsciiDate(calcolo_pasqua 2007)
+  putStrLn$ mostra_data(calcolo_pasqua 2003)
+  putStrLn$ mostra_data(calcolo_pasqua 2004)
+  putStrLn$ mostra_data(calcolo_pasqua 2005)
+  putStrLn$ mostra_data(calcolo_pasqua 2006)
