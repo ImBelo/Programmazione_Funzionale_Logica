@@ -32,21 +32,28 @@ calcolo_pasqua anno = crea_data giorno mese anno
         c = anno `mod` 7
 controlla_bisestile :: Int -> Bool
 controlla_bisestile anno = (anno `mod` 4 == 0 && anno `mod` 100 /= 0) || (anno `mod` 400 == 0)
-
+{-! DA FARE !-}
 calcola_martedi_giovedi_grasso :: Bool -> Calendario -> Calendario
 calcola_martedi_giovedi_grasso _ pasqua = pasqua
 
 mostra_data :: Calendario -> String
-mostra_data giorno_calendario = unlines combinedArt
+mostra_data giorno_calendario = unlines data_combinata
       where
-        digits = map digitToInt $ show $ giorno giorno_calendario
-        artNum1 = prendiCifreAscii (digits !! 0)
-        artNum2 = prendiCifreAscii (digits !! 1)
-        space = [" "," "," "," "," "]
-        artLetters1 = (mesiAsciiMap(mese giorno_calendario)) !! 0  
-        artLetters2 = (mesiAsciiMap(mese giorno_calendario)) !! 1  
-        artLetters3 = (mesiAsciiMap(mese giorno_calendario)) !! 2  
-        combinedArt = foldl1 (zipWith (++)) [artNum1 , artNum2 ,space , space, artLetters1 , artLetters2 , artLetters3]
+        -- lista di lista contenente le cifre del giorno 
+        cifre_ascii :: [[String]]
+        cifre_ascii = map (prendiCifreAscii . digitToInt) (show $ giorno giorno_calendario)
+        -- lista di lista contentente le 3 lettere del mese
+        lettere_ascii :: [[String]]
+        lettere_ascii = (mesiAsciiMap (mese giorno_calendario))
+        spazio = replicate 5 " "    
+        -- Combina le cifre affiancate (es: ["1"] ++ ["2"] → ["12"])
+        cifre_combinate :: [String]
+        cifre_combinate = foldl1 (zipWith (++)) cifre_ascii  
+        lettere_combinate :: [String]
+        -- Combina le lettere affiancate
+        lettere_combinate = foldl1 (zipWith (++)) lettere_ascii 
+        -- Combina cifre spazio e lettere insieme 
+        data_combinata = zipWith3 (\cifre spazio lettere -> cifre ++ spazio ++ lettere) cifre_combinate spazio lettere_combinate
 --
 --
 -- Converts a digit (0-9) to its 5x5 ASCII representation
@@ -176,3 +183,7 @@ main = do
   putStrLn$ mostra_data(calcolo_pasqua 2004)
   putStrLn$ mostra_data(calcolo_pasqua 2005)
   putStrLn$ mostra_data(calcolo_pasqua 2006)
+  putStrLn$ mostra_data(calcolo_pasqua 2007)
+  putStrLn$ mostra_data(calcolo_pasqua 2008)
+  putStrLn$ mostra_data(calcolo_pasqua 2009)
+  putStrLn$ mostra_data(calcolo_pasqua 2010)
