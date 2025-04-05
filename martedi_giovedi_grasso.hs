@@ -7,7 +7,13 @@ data Calendario = Calendario
   { giorno :: Int, 
     mese :: Mese,
     anno :: Int
-  } deriving (Show) 
+  } 
+instance Show Calendario where
+  show cal = formatta_due_cifre(giorno cal) ++ " " ++ show (mese cal) ++ " " ++ show (anno cal)
+formatta_due_cifre :: Int ->String
+formatta_due_cifre n | n < 10 = "0" ++ show n 
+                     | n > 99 || n < 0 = error $ show (n) ++ "il numero deve essere tra 0 e 99" 
+                     | otherwise = show n
 crea_data :: Int->Mese->Int->Calendario
 crea_data x Febbraio anno | x>0 && x<=(28 + fromEnum(controlla_bisestile anno)) = Calendario{giorno = x,mese = Febbraio,anno = anno}
                           | otherwise = error $ show x ++ " il giorno deve essere tra 1-" ++ show ( 28 + fromEnum(controlla_bisestile anno)) 
@@ -30,6 +36,14 @@ calcolo_pasqua anno = crea_data giorno mese anno
         a = anno `mod` 19
         b = anno `mod` 4
         c = anno `mod` 7
+        (giorno', mese') = case (d, e) of 
+        -- 1. Se d = 29 ed e = 6 -> Pasqua il 19 aprile
+          (29, 6) -> (19, Aprile)
+        
+        -- 2. Se d = 28 ed e = 6 e a > 10 -> Pasqua il 18 aprile
+          (28, 6) | a > 10 -> (18, Aprile)
+        
+          _ -> (giorno, mese)
 controlla_bisestile :: Int -> Bool
 controlla_bisestile anno = (anno `mod` 4 == 0 && anno `mod` 100 /= 0) || (anno `mod` 400 == 0)
 {-! DA FARE !-}
@@ -41,11 +55,11 @@ mostra_data giorno_calendario = unlines data_combinata
       where
         -- lista di lista contenente le cifre del giorno 
         cifre_ascii :: [[String]]
-        cifre_ascii = map (prendiCifreAscii . digitToInt) (show $ giorno giorno_calendario)
+        cifre_ascii = map (prendiCifreAscii . digitToInt) (formatta_due_cifre $ giorno giorno_calendario)
         -- lista di lista contentente le 3 lettere del mese
         lettere_ascii :: [[String]]
         lettere_ascii = (mesiAsciiMap (mese giorno_calendario))
-        spazio = replicate 5 " "    
+        spazio = foldl1 (zipWith(++)) (replicate 5 $ replicate 5 " ")
         -- Combina le cifre affiancate (es: ["1"] ++ ["2"] → ["12"])
         cifre_combinate :: [String]
         cifre_combinate = foldl1 (zipWith (++)) cifre_ascii  
