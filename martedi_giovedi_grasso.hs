@@ -3,13 +3,11 @@ import qualified Data.Map as Map
 import Data.Char (digitToInt)
 data Mese = Febbraio | Marzo | Aprile
               deriving (Eq,Ord, Enum, Bounded, Show, Read)
-
 data Calendario = Calendario
   { giorno :: Int, 
     mese :: Mese,
     anno :: Int
   } deriving (Show) 
-
 crea_data :: Int->Mese->Int->Calendario
 crea_data x Febbraio anno | x>0 && x<=(28 + fromEnum(controlla_bisestile anno)) = Calendario{giorno = x,mese = Febbraio,anno = anno}
                           | otherwise = error $ show x ++ " il giorno deve essere tra 1-" ++ show ( 28 + fromEnum(controlla_bisestile anno)) 
@@ -32,33 +30,26 @@ calcolo_pasqua anno = crea_data giorno mese anno
         a = anno `mod` 19
         b = anno `mod` 4
         c = anno `mod` 7
-
 controlla_bisestile :: Int -> Bool
 controlla_bisestile anno = (anno `mod` 4 == 0 && anno `mod` 100 /= 0) || (anno `mod` 400 == 0)
 
-calcola_martedi_giovedi_grasso :: Bool -> Calendario -> Calendario
-calcola_martedi_giovedi_grasso turno_calcolo pasqua 
-        -- calcolo il martedi grasso o il giovedi grasso
-       | turno_calcolo == 1 = calcola_giorno_mese 47 pasqua
-       | otherwise = calcola_giorno_mese 52 pasqua
-
 calcola_giorno_mese :: Int -> Calendario -> Calendario
 calcola_giorno_mese giorni_scalare pasqua 
-        | (mese pasqua) == Aprile = calcola_aprile (giorno pasqua) - giorni_scalare + 31 (anno pasqua)
-                                    where 
-                                      calcola_aprile risultato_calcolo anno_pasqua = 
-                                      anno_bisestile = controlla_bisestile anno_pasqua 
-                                      | numero < 0 && anno_bisestile == True = Calendario{giorno = risultato_calcolo + 29, mese = Febbraio, anno = anno_pasqua}
-                                      | numero < 0 && anno_bisestile == False = Calendario{giorno = risultato_calcolo + 28, mese =  Febbraio, anno = anno_pasqua}
-                                      | otherwise = Calendario{giorno = risultato_calcolo, mese = Marzo, anno = anno_pasqua}
-                                      
-        | (mese pasqua) == Marzo = calcola_marzo (giorno pasqua) - giorni_scalare (anno pasqua) 
-                                    where
-                                        calcola_marzo risultato_calcolo anno_pasqua = 
-                                          anno_bisestile = controlla_bisestile anno_pasqua
-                                          | anno_bisestile == True = Calendario{giorno = risultato_calcolo + 29, mese = Febbraio, anno = anno_pasqua}
-                                          | otherwise = Calendario{giorno = risultato_calcolo + 28, mese = Febbraio, anno = anno_pasqua}
-        
+  | (giorno pasqua) - giorni_scalare <= 0 = calcola_giorno_mese 0 calendario
+  | otherwise = Calendario{giorno = giorno pasqua, mese = mese pasqua,anno = anno pasqua}
+    where
+      calendario = Calendario{giorno = giorni_rimasti, mese = mese_precedente,anno = anno_corrente} 
+      giorni_rimasti = (giorno pasqua - giorni_scalare) + (giorniDelMese mese_precedente anno_corrente)
+      mese_precedente = pred (mese pasqua) 
+      anno_corrente = anno pasqua
+
+giorniDelMese :: Mese -> Int -> Int
+giorniDelMese Febbraio anno
+  | controlla_bisestile anno = 29
+  | otherwise        = 28
+giorniDelMese mese _
+  | mese == Aprile = 30
+  | mese == Marzo = 31
 
 mostra_data :: Calendario -> String
 mostra_data giorno_calendario = unlines data_combinata
