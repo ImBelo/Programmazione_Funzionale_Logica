@@ -69,3 +69,26 @@ calcola_martedi_giovedi_grasso(martedi, Anno, MartediGrasso, _) :-
 
 calcola_martedi_giovedi_grasso(giovedi, Anno, _, GiovediGrasso) :-
     calcola_giovedi_grasso(Anno, GiovediGrasso).       
+
+ascii_art(Num, AsciiArt) :-
+    (Num =:= 0 -> AsciiArt = [' *** ', '*   *', '*   *', '*   *', ' *** ']),
+    (Num =:= 1 -> AsciiArt = ['   * ', '  ** ', '   * ', '   * ', '  ***']),
+    (Num =:= 2 -> AsciiArt = ['  ***', '    *', ' *** ', '*    ', '*****']),
+    (Num =:= 3 -> AsciiArt = [' *** ', '    *', ' *** ', '    *', ' *** ']),
+    (Num =:= 4 -> AsciiArt = ['*   *', '*   *', '*****', '    *', '    *']),
+    (Num =:= 5 -> AsciiArt = ['*****', '*    ', '**** ', '    *', '**** ']),
+    (Num =:= 6 -> AsciiArt = [' *** ', '*    ', '**** ', '*   *', ' *** ']),
+    (Num =:= 7 -> AsciiArt = ['*****', '    *', '   * ', '  *  ', ' *   ']),
+    (Num =:= 8 -> AsciiArt = [' *** ', '*   *', ' *** ', '*   *', ' *** ']),
+    (Num =:= 9 -> AsciiArt = [' *** ', '*   *', ' ****', '    *', ' *** ']).
+mese_ascii(Mese,AsciiArt) :- 
+     (Mese == febbraio -> AsciiArt = [["*****","*    ","*****","*    ","*    "],
+                                      ["*****","*    ","*****","*    ","*****"],
+                                      ["**** ","*   *","**** ","*   *","**** "]]);
+     (Mese == marzo -> AsciiArt = [["*   *","* * *","*   *","*   *","*   *"],
+                                   [" *** ","*   *","*****","*   *","*   *"],
+                                   ["**** ","*   *","**** ","*  * ","*   *"]]);
+     (Mese == aprile -> AsciiArt = [[" *** ","*   *","*****","*   *","*   *"],
+                                    ["**** ","*   *","**** ","*    ","*    "],
+                                    ["**** ","*   *","**** ","*  * ","*   *"]]).
+        
