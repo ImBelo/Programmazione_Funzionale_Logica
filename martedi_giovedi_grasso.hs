@@ -1,5 +1,6 @@
 module Main where
 import qualified Data.Map as Map
+import Text.Read (readMaybe)
 import Data.Char (digitToInt)
 data Mese = Febbraio | Marzo | Aprile
               deriving (Eq,Ord, Enum, Bounded, Show, Read)
@@ -74,6 +75,38 @@ mostra_data giorno_calendario = unlines data_combinata
         lettere_combinate = foldl1 (zipWith (++)) lettere_ascii 
         -- Combina cifre spazio e lettere insieme 
         data_combinata = zipWith3 (\cifre spazio lettere -> cifre ++ spazio ++ lettere) cifre_combinate spazio lettere_combinate
+
+acquisisci_anni :: IO (Int, Int)
+acquisisci_anni = do 
+    putStrLn "Inserisci il primo anno di cui calcolare il martedi grasso >>"
+    primo_anno <- getLine
+    putStrLn "Inserisci il secondo anno di cui calcolare il giovedi grasso >>"
+    secondo_anno <- getLine
+
+
+    case (readMaybe primo_anno :: Maybe Int, readMaybe secondo_anno :: Maybe Int) of
+        (Just primo, Just secondo)  -> do 
+          if not (controlla_acquisizione (read primo_anno :: Int)) || not (controlla_acquisizione (read secondo_anno :: Int))
+          then do
+            putStrLn "Input non validi, riprova!!"
+            acquisisci_anni
+          else return (read primo_anno, read secondo_anno)
+        (Nothing, Nothing) -> do
+          putStrLn "Gli anni devono essere dei numeri interi, riprova!"
+          acquisisci_anni
+        (Just primo, Nothing) -> do 
+          putStrLn "Il secondo anno deve essere un intero, riprova!"
+          acquisisci_anni
+        (Nothing, Just secondo) -> do
+          putStrLn "il primo anno deve essere un intero, riprova!"
+          acquisisci_anni
+
+
+controlla_acquisizione :: Int -> Bool
+controlla_acquisizione anno_acquisito
+  | anno_acquisito < 1900 || anno_acquisito > 2099 = False
+  | otherwise = True
+
 --
 --
 -- Converts a digit (0-9) to its 5x5 ASCII representation
@@ -199,6 +232,8 @@ cifreAscii =
 
 main :: IO ()
 main = do
-  putStrLn $ mostra_data $ calcolo_pasqua 2003
-  putStrLn ( mostra_data (calcola_martedi_giovedi_grasso False (calcolo_pasqua 2003)))
-  putStrLn ( mostra_data (calcola_martedi_giovedi_grasso True (calcolo_pasqua 2003)))
+  anni_acquisiti <- acquisisci_anni
+  let primo_anno = fst anni_acquisiti 
+  let secondo_anno = snd anni_acquisiti
+  putStrLn (mostra_data (calcola_martedi_giovedi_grasso False (calcolo_pasqua primo_anno)))
+  putStrLn (mostra_data (calcola_martedi_giovedi_grasso True (calcolo_pasqua secondo_anno)))
