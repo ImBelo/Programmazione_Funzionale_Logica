@@ -1,7 +1,19 @@
+{-
+ - Progetto di Programmazione Logica e Funzionale
+ - Studenti: Elia Renzoni e Gianmarco Beligni
+ - N. Matricola: - - 
+ - Sessione Estiva a.a 2024/2025
+ -}
+
+
 module Main where
+
+-- inclusione delle librerie
 import qualified Data.Map as Map
 import Text.Read (readMaybe)
 import Data.Char (digitToInt)
+
+-- definizione dei tipi Mese e Calendario
 data Mese = Febbraio | Marzo | Aprile
               deriving (Eq,Ord, Enum, Bounded, Show, Read)
 data Calendario = Calendario
@@ -9,6 +21,8 @@ data Calendario = Calendario
     mese :: Mese,
     anno :: Int
   } deriving (Show) 
+
+-- dichiarazione della funzione per formattare la data
 crea_data :: Int->Mese->Int->Calendario
 crea_data x Febbraio anno | x>0 && x<=(28 + fromEnum(controlla_bisestile anno)) = Calendario{giorno = x,mese = Febbraio,anno = anno}
                           | otherwise = error $ show x ++ " il giorno deve essere tra 1-" ++ show ( 28 + fromEnum(controlla_bisestile anno)) 
@@ -17,6 +31,8 @@ crea_data x Marzo anno    | x>0 && x<=31 = Calendario{giorno = x,mese = Marzo,an
 crea_data x Aprile anno   | x>0 && x<=30 = Calendario{giorno = x,mese = Aprile,anno = anno}
                           | otherwise = error $ show x ++ " il giorno deve essere tra 1-30"  
 
+-- dichiarazione della funzione per la restituzione dei giorni
+-- dei mesi
 giorniDelMese :: Mese -> Int -> Int
 giorniDelMese Febbraio anno
   | controlla_bisestile anno = 29
@@ -25,6 +41,10 @@ giorniDelMese mese _
   | mese == Aprile = 30
   | mese == Marzo = 31                     
 
+-- dichiarazione della funzione per il calcolo della pasqua
+-- il paramentro in ingresso indica l'anno di riferimento
+-- la funzione restituisce in uscita la data della pasqua
+-- formattata secondo il tipo dato Calendario
 calcolo_pasqua :: Int -> Calendario
 calcolo_pasqua anno = crea_data giorno mese anno
   where giorno | z < 10 = z + 22
@@ -39,15 +59,35 @@ calcolo_pasqua anno = crea_data giorno mese anno
         a = anno `mod` 19
         b = anno `mod` 4
         c = anno `mod` 7
+
+-- dichiarazione della funzione per controllare la 
+-- bisestilità di un determinato anno
+-- la funzione prende in ingresso l'anno di riferimento
+-- e restituisce in uscita un valore indicante se 
+-- l'anno è bisestile o meno
 controlla_bisestile :: Int -> Bool
 controlla_bisestile anno = (anno `mod` 4 == 0 && anno `mod` 100 /= 0) || (anno `mod` 400 == 0)
-{-! DA FARE !-}
+
+-- dichiarazione della funzione per il calcolo del martedi e
+-- giovedi grasso. 
+-- Come valore in ingresso prende un tipo Bool indicante
+-- il turno del calcolo, quindi se è turno del primo o del
+-- secondo anno. Inoltre prende in ingresso anche la data della
+-- pasqua formattata secondo il tipo dato Calendario. 
+-- La funzione restituisce la data del  martedi o del giovedi
+-- grasso formattato come tipo dato Calendario
 calcola_martedi_giovedi_grasso :: Bool -> Calendario -> Calendario
 calcola_martedi_giovedi_grasso turno_calcolo pasqua 
         -- calcolo il martedi grasso o il giovedi grasso
   | turno_calcolo == False = calcola_giorno_mese 47 pasqua
   | otherwise = calcola_giorno_mese 52 pasqua
 
+-- dichiarazione della funzione pe il calcolo effetivo
+-- del martedi e del giovedi grasso.
+-- In ingresso prende il turno di calcolo e la data della pasqua
+-- formattata con il tipo dato Calendario.
+-- In uscita restituisce la data del martedì o del giovedì grasso. 
+-- formattata con il tipo dato Calendario
 calcola_giorno_mese :: Int -> Calendario -> Calendario
 calcola_giorno_mese giorni_scalare pasqua 
   | (giorno pasqua) - giorni_scalare <= 0 = calcola_giorno_mese 0 calendario
@@ -57,6 +97,10 @@ calcola_giorno_mese giorni_scalare pasqua
       giorni_rimasti = (giorno pasqua - giorni_scalare) + (giorniDelMese mese_precedente anno_corrente)
       mese_precedente = pred (mese pasqua) 
       anno_corrente = anno pasqua
+
+-- dichiarazione della funzione per la stampa 
+-- a caratteri giganti del giorno e del mese in cui 
+-- cade il martedi o il giovedi grasso
 mostra_data :: Calendario -> String
 mostra_data giorno_calendario = unlines data_combinata
       where
@@ -76,6 +120,10 @@ mostra_data giorno_calendario = unlines data_combinata
         -- Combina cifre spazio e lettere insieme 
         data_combinata = zipWith3 (\cifre spazio lettere -> cifre ++ spazio ++ lettere) cifre_combinate spazio lettere_combinate
 
+-- dichiarazione della funzione per l'acquisizione
+-- da tastiera dei dati d'ingresso del problema.
+-- La funzione restituisce come risultato una tupla
+-- contenente i due anni.
 acquisisci_anni :: IO (Int, Int)
 acquisisci_anni = do 
     putStrLn "Inserisci il primo anno di cui calcolare il martedi grasso >>"
@@ -84,24 +132,36 @@ acquisisci_anni = do
     secondo_anno <- getLine
 
 
+   -- validazione dei dati acquisiti
     case (readMaybe primo_anno :: Maybe Int, readMaybe secondo_anno :: Maybe Int) of
+	-- se entrambi i dati acquisiti sono cifre
         (Just primo, Just secondo)  -> do 
+	   -- controlla se sono cifre valide secondo la specifica del problema
           if not (controlla_acquisizione (read primo_anno :: Int)) || not (controlla_acquisizione (read secondo_anno :: Int))
           then do
             putStrLn "Input non validi, riprova!!"
             acquisisci_anni
           else return (read primo_anno, read secondo_anno)
+	 -- se entrambi i dati acquisiti non sono cifre, ma lettere
         (Nothing, Nothing) -> do
           putStrLn "Gli anni devono essere dei numeri interi, riprova!"
           acquisisci_anni
+	-- se solo il secondo anno è costituito da lettere
         (Just primo, Nothing) -> do 
           putStrLn "Il secondo anno deve essere un intero, riprova!"
           acquisisci_anni
+        -- se sono il primo anno è costuituito da lettere
         (Nothing, Just secondo) -> do
           putStrLn "il primo anno deve essere un intero, riprova!"
           acquisisci_anni
 
 
+-- dichiarazione della funzione per effettuare il controllo
+-- di validità degli anni acquisiti. 
+-- Controlla se le date non siano più piccole del 1900 e più
+-- grandi del 2099. 
+-- Riceve in ingresso l'anno appena acquisito e restistuisce
+-- l'esito della verifica
 controlla_acquisizione :: Int -> Bool
 controlla_acquisizione anno_acquisito
   | anno_acquisito < 1900 || anno_acquisito > 2099 = False
@@ -231,9 +291,18 @@ cifreAscii =
     ]
 
 main :: IO ()
+
+-- definizione della funzione principale
 main = do
+
+  -- acquisizione dei due anni
   anni_acquisiti <- acquisisci_anni
+
+  -- prendo il primo anno dalla tupla restituita
+  -- prendo il secondo anno dalla tupla restituita
   let primo_anno = fst anni_acquisiti 
   let secondo_anno = snd anni_acquisiti
+
+  -- calcolo e stampo il valore del martedi e del giovedi grasso
   putStrLn (mostra_data (calcola_martedi_giovedi_grasso False (calcolo_pasqua primo_anno)))
   putStrLn (mostra_data (calcola_martedi_giovedi_grasso True (calcolo_pasqua secondo_anno)))
