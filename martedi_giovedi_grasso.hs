@@ -37,25 +37,23 @@ formattaADueCifre n | n < 10 = "0" ++ show n
  - il terzo argomento è l'anno-}
 creaData :: Giorno->Mese->Anno->Calendario
 creaData x Febbraio anno | x>0 && x<=(28 + fromEnum(controllaBisestile anno)) = Calendario{giorno = x,mese = Febbraio,anno = anno}
-                          | otherwise = error $ show x ++ " il giorno deve essere tra 1-" ++ show ( 28 + fromEnum(controllaBisestile anno)) 
+                         | otherwise = error $ show x ++ " il giorno deve essere tra 1-" ++ show ( 28 + fromEnum(controllaBisestile anno)) 
 creaData x Marzo anno    | x>0 && x<=31 = Calendario{giorno = x,mese = Marzo,anno = anno}
-                          | otherwise = error $ show x ++ " il giorno deve essere tra 1-31"  
+                         | otherwise = error $ show x ++ " il giorno deve essere tra 1-31"  
 creaData x Aprile anno   | x>0 && x<=30 = Calendario{giorno = x,mese = Aprile,anno = anno}
-                          | otherwise = error $ show x ++ " il giorno deve essere tra 1-30"  
+                         | otherwise = error $ show x ++ " il giorno deve essere tra 1-30"  
 
 {- Funzione che restituisce quanti giorno ci sono in un mese:
  - il primo argomento è il mese
  - il secondo argomento è l'anno (importante per Febbraio) -}
 giorniDelMese :: Mese -> Anno -> Giorno
-giorniDelMese Febbraio anno
-  | controllaBisestile anno = 29
-  | otherwise        = 28
-giorniDelMese mese _
-  | mese == Aprile = 30
-  | mese == Marzo = 31                     
+giorniDelMese Febbraio anno | controllaBisestile anno = 29
+                            | otherwise = 28
+giorniDelMese mese _ | mese == Aprile = 30
+                     | mese == Marzo = 31                     
 
 {- Funzione che restituisce la data di Pasqua:
- - il primo argomento è l'anno-}
+ - il primo argomento è l'anno -}
 calcoloPasqua :: Anno -> Calendario
 calcoloPasqua anno 
     -- Caso speciale 25 aprile -> 18 aprile
@@ -120,7 +118,6 @@ formattaDataAscii giornoCalendario = unlines dataCombinata
         spazioTraGiornoMese = replicate 5 $ replicate 5 " "
         -- Combina cifre spazio e lettere insieme 
         dataCombinata =  foldl1 (zipWith(++)) $ giornoAscii ++ spazioTraGiornoMese ++ meseAscii
-        --dataCombinata = zipWith3 (\cifre spazio lettere -> cifre ++ spazio ++ lettere) cifreCombinate spazioTraGiornoMese lettereCombinate
 {- Funzione IO ricorsiva che prende da tastiera due anni validi tra 1900-2099 incluso -}
 acquisisciAnno :: GiornoGrasso -> IO Int
 acquisisciAnno giornoGrasso = do
@@ -137,18 +134,14 @@ convalidaAnno = do
                   _ -> do 
                      putStrLn "Input non valido. L'anno deve essere tra 1900 e 2099."
                      convalidaAnno
--- dichiarazione della funzione per effettuare il controllo
--- di validità degli anni acquisiti. 
--- Controlla se le date non siano più piccole del 1900 e più
--- grandi del 2099. 
--- Riceve in ingresso l'anno appena acquisito e restistuisce
--- l'esito della verifica
+{- Funzione per controllare che l'anno sia tra 1900-2099
+ - l'argomento è l'anno -}
 controllaAnno :: Anno -> Bool
 controllaAnno anno = anno >= 1900 && anno <= 2099
 
 
 {- Funzione che converte Mese nella sua rappresentazione ASCII art:
- - l'argomento è il mese da trasformare -}
+ - l'argomento è il mese da cui prendere l'ASCII art-}
 meseInAsciiArt ::Mese -> [[String]]
 meseInAsciiArt mese | mese == Febbraio = [["***** ",
                                            "*     ",
@@ -195,6 +188,11 @@ meseInAsciiArt mese | mese == Febbraio = [["***** ",
                                            "**** ",
                                            "*  * ",
                                            "*   *"]]
+                    | otherwise =         [["  ?  "],
+                                           ["  ?  "],
+                                           ["  ?  "],
+                                           ["  ?  "],
+                                           ["  ?  "]]
    
 {- Funzione che restituisce ASCII art di una cifra:
  - l'argomento è la cifra da cui prendere l'ASCII art -}
