@@ -11,306 +11,255 @@ module Main where
 -- inclusione delle librerie
 import Text.Read (readMaybe)
 import Data.Char (digitToInt)
-
+import System.IO (hFlush, stdout)
+-- definizione dei 
+type Giorno = Int
+type Anno = Int
 -- definizione dei tipi Mese, Giorno e Calendario
 data Mese = Febbraio | Marzo | Aprile
               deriving (Eq,Ord, Enum, Bounded, Show, Read)
-data Giorno = Martedi | Giovedi
+data GiornoGrasso = MartedìGrasso | GiovedìGrasso
               deriving (Eq,Ord,Enum,Show,Read)
 data Calendario = Calendario
-  { giorno :: Int, 
+  { giorno :: Giorno, 
     mese :: Mese,
-    anno :: Int
+    anno :: Anno
   } deriving (Show) 
-
--- dichiarazione della funzione per formattare la data
-crea_data :: Int->Mese->Int->Calendario
-crea_data x Febbraio anno | x>0 && x<=(28 + fromEnum(controlla_bisestile anno)) = Calendario{giorno = x,mese = Febbraio,anno = anno}
-                          | otherwise = error $ show x ++ " il giorno deve essere tra 1-" ++ show ( 28 + fromEnum(controlla_bisestile anno)) 
-crea_data x Marzo anno    | x>0 && x<=31 = Calendario{giorno = x,mese = Marzo,anno = anno}
+{- Funzione per formattare un numero tra 1-99 incluso per avere sempre due cifre:
+ - l'argomento è un numero tra 1-99 incluso-}
+formattaADueCifre :: Int -> String
+formattaADueCifre n | n < 10 = "0" ++ show n 
+                     | n > 99 || n < 0 = error $ show (n) ++ "il numero deve essere tra 0 e 99" 
+                     | otherwise = show n
+{- Funzione per la creazione del tipo Data: 
+ - il primo argomento è il giorno
+ - il secondo argomento è il Mese
+ - il terzo argomento è l'anno-}
+creaData :: Giorno->Mese->Anno->Calendario
+creaData x Febbraio anno | x>0 && x<=(28 + fromEnum(controllaBisestile anno)) = Calendario{giorno = x,mese = Febbraio,anno = anno}
+                          | otherwise = error $ show x ++ " il giorno deve essere tra 1-" ++ show ( 28 + fromEnum(controllaBisestile anno)) 
+creaData x Marzo anno    | x>0 && x<=31 = Calendario{giorno = x,mese = Marzo,anno = anno}
                           | otherwise = error $ show x ++ " il giorno deve essere tra 1-31"  
-crea_data x Aprile anno   | x>0 && x<=30 = Calendario{giorno = x,mese = Aprile,anno = anno}
+creaData x Aprile anno   | x>0 && x<=30 = Calendario{giorno = x,mese = Aprile,anno = anno}
                           | otherwise = error $ show x ++ " il giorno deve essere tra 1-30"  
 
--- dichiarazione della funzione per la restituzione dei giorni
--- dei mesi
-giorniDelMese :: Mese -> Int -> Int
+{- Funzione che restituisce quanti giorno ci sono in un mese:
+ - il primo argomento è il mese
+ - il secondo argomento è l'anno (importante per Febbraio) -}
+giorniDelMese :: Mese -> Anno -> Giorno
 giorniDelMese Febbraio anno
-  | controlla_bisestile anno = 29
+  | controllaBisestile anno = 29
   | otherwise        = 28
 giorniDelMese mese _
   | mese == Aprile = 30
   | mese == Marzo = 31                     
 
--- dichiarazione della funzione per il calcolo della pasqua
--- il paramentro in ingresso indica l'anno di riferimento
--- la funzione restituisce in uscita la data della pasqua
--- formattata secondo il tipo dato Calendario
-calcolo_pasqua :: Int -> Calendario
-calcolo_pasqua anno 
+{- Funzione che restituisce la data di Pasqua:
+ - il primo argomento è l'anno-}
+calcoloPasqua :: Anno -> Calendario
+calcoloPasqua anno 
     -- Caso speciale 25 aprile -> 18 aprile
-    | giorno == 25 && mese == Aprile && d == 28 && e == 6 && a > 10 = crea_data 18 Aprile anno  
+    | giorno == 25 && mese == Aprile && d == 28 && e == 6 && a > 10 = creaData 18 Aprile anno  
     -- Caso speciale 26 aprile -> 19 aprile
-    | giorno == 26 && mese == Aprile = crea_data 19 Aprile anno                                  
-    | otherwise = crea_data giorno mese anno
+    | giorno == 26 && mese == Aprile = creaData 19 Aprile anno                                  
+    | otherwise = creaData giorno mese anno
   where giorno | z < 10 = z + 22
                | otherwise = z - 9 
         mese | z < 10 = Marzo
              | otherwise = Aprile
         z = d + e 
-        d = (19 * a + m_greg) `mod` 30
-        e = (2*b+4*c + 6 * d + n_greg) `mod` 7
-        m_greg = 24
-        n_greg = 5
+        d = (19 * a + mGreg) `mod` 30
+        e = (2*b+4*c + 6 * d + nGreg) `mod` 7
+        mGreg = 24
+        nGreg = 5
         a = anno `mod` 19
         b = anno `mod` 4
         c = anno `mod` 7
--- dichiarazione della funzione per controllare la 
--- bisestilità di un determinato anno
--- la funzione prende in ingresso l'anno di riferimento
--- e restituisce in uscita un valore indicante se 
--- l'anno è bisestile o meno
-controlla_bisestile :: Int -> Bool
-controlla_bisestile anno = (anno `mod` 4 == 0 && anno `mod` 100 /= 0) || (anno `mod` 400 == 0)
+{- Funzione che restituisce se l'anno è bisestile:
+ - l'argomento è l'anno da verificare -}
+controllaBisestile :: Anno -> Bool
+controllaBisestile anno = (anno `mod` 4 == 0 && anno `mod` 100 /= 0) || (anno `mod` 400 == 0)
+{- Funzione che calcola la data del Martedì o Giovedì grasso 
+ - il primo argomento è il giorno grasso
+ - il secondo argomento è la data di pasqua dell'anno in cui si vuole calcolare i giorni grassi -}
+calcolaGiornoGrasso :: GiornoGrasso -> Calendario -> Calendario
+calcolaGiornoGrasso giornoGrasso pasqua 
+  | giornoGrasso == MartedìGrasso = sottraiGiorniDaData 47 pasqua
+  | giornoGrasso == GiovedìGrasso = sottraiGiorniDaData 52 pasqua
 
--- dichiarazione della funzione per il calcolo del martedi e
--- giovedi grasso. 
--- Come valore in ingresso prende un tipo Bool indicante
--- il turno del calcolo, quindi se è turno del primo o del
--- secondo anno. Inoltre prende in ingresso anche la data della
--- pasqua formattata secondo il tipo dato Calendario. 
--- La funzione restituisce la data del  martedi o del giovedi
--- grasso formattato come tipo dato Calendario
-calcola_martedi_giovedi_grasso :: Giorno -> Calendario -> Calendario
-calcola_martedi_giovedi_grasso giorno pasqua 
-  -- calcolo il martedi grasso o il giovedi grasso
-  | giorno == Martedi = calcola_giorno_mese 47 pasqua
-  | giorno == Giovedi = calcola_giorno_mese 52 pasqua
-
--- dichiarazione della funzione pe il calcolo effetivo
--- del martedi e del giovedi grasso.
--- In ingresso prende il giorno e la data della pasqua
--- formattata con il tipo dato Calendario.
--- In uscita restituisce la data del martedì o del giovedì grasso. 
--- formattata con il tipo dato Calendario
-calcola_giorno_mese :: Int -> Calendario -> Calendario
-calcola_giorno_mese giorni_scalare pasqua 
-  | (giorno pasqua) - giorni_scalare <= 0 = calcola_giorno_mese 0 calendario
-  | otherwise = Calendario{giorno = giorno pasqua, mese = mese pasqua,anno = anno pasqua}
+{- Funzione che calcola la sottrazione di giorni ad una data:
+ - il primo argomento è il numero di giorno da sottrarre
+ - il secondo argomento è la data a cui sottrarre i giorni -}
+sottraiGiorniDaData :: Giorno -> Calendario -> Calendario
+sottraiGiorniDaData giorniScalare calendario
+  -- caso base: i giorni da scalare sono meno del giorno del calendario  
+  | (giorno calendario) - giorniScalare > 0 = creaData (giornoCorrente-giorniScalare) meseCorrente annoCorrente
+  -- caso ricorsivo: aggiunge i giorni del mese precedente finché la sottrazione sia maggiore di 0
+  | otherwise = sottraiGiorniDaData 0 dataAggiornata
     where
-      calendario = Calendario{giorno = giorni_rimasti, mese = mese_precedente,anno = anno_corrente} 
-      giorni_rimasti = (giorno pasqua - giorni_scalare) + (giorniDelMese mese_precedente anno_corrente)
-      mese_precedente = pred (mese pasqua) 
-      anno_corrente = anno pasqua
+      dataAggiornata = Calendario{giorno = giorniRimasti, mese = mesePrecedente, anno = annoCorrente}
+      giorniRimasti = (giornoCorrente - giorniScalare) + (giorniDelMese mesePrecedente annoCorrente)
+      mesePrecedente = pred (mese calendario) 
+      annoCorrente = (anno calendario)
+      giornoCorrente = (giorno calendario)
+      meseCorrente = (mese calendario)
 
--- dichiarazione della funzione per la stampa 
--- a caratteri giganti del giorno e del mese in cui 
--- cade il martedi o il giovedi grasso
-mostra_data :: Calendario -> String
-mostra_data giorno_calendario = unlines data_combinata
+{- Funzione che trasforma una data nella rappesentazione ASCII art:
+ - l'argomento è una data -}
+formattaDataAscii :: Calendario -> String
+formattaDataAscii giornoCalendario = unlines dataCombinata
       where
-        spazioTraCaratteri = replicate 5 " "
+        spazioTraCaratteri = [replicate 5 " "]
         -- lista di lista contenente le cifre del giorno se è ad una cifra aggiunge uno zero davanti
-        cifre_ascii :: [[String]]
-        cifre_ascii | giorno giorno_calendario >= 10 = [prendiCifreAscii $ digitToInt (head (show $ giorno giorno_calendario)),                                                        spazioTraCaratteri,
-                                                        prendiCifreAscii $ digitToInt (last (show $ giorno giorno_calendario))]
-                    | otherwise = [prendiCifreAscii 0,
-                                   spazioTraCaratteri,
-                                   prendiCifreAscii (giorno giorno_calendario)]
+        cifreAsci :: [[String]]
+        cifreAsci = map (cifraInAsciiArt . digitToInt) (formattaADueCifre $ giorno giornoCalendario)
+        giornoAscii = take 1 cifreAsci ++ spazioTraCaratteri ++ drop 1 cifreAsci
         -- lista di lista contentente le 3 lettere del mese
-        lettere_ascii :: [[String]]
-        lettere_ascii = (mesiAsciiMap (mese giorno_calendario))
-        -- Combina le cifre affiancate (es: ["1"] ++ ["2"] → ["12"])
-        cifre_combinate :: [String]
-        cifre_combinate = foldl1 (zipWith (++)) cifre_ascii  
-        lettere_combinate :: [String]
-        -- Combina le lettere affiancate
-        lettere_combinate = foldl1 (zipWith (++)) lettere_ascii 
-        spazioTraGiornoMese = foldl1 (zipWith(++)) $ replicate 5 $ replicate 5 " "
+        meseAscii :: [[String]]
+        meseAscii = (meseInAsciiArt (mese giornoCalendario))
+        spazioTraGiornoMese = replicate 5 $ replicate 5 " "
         -- Combina cifre spazio e lettere insieme 
-        data_combinata = zipWith3 (\cifre spazio lettere -> cifre ++ spazio ++ lettere) cifre_combinate spazioTraGiornoMese lettere_combinate
-
--- dichiarazione della funzione per l'acquisizione
--- da tastiera dei dati d'ingresso del problema.
--- La funzione restituisce come risultato una tupla
--- contenente i due anni.
-acquisisci_anni :: IO (Int, Int)
-acquisisci_anni = do 
-  putStrLn "Inserisci il primo anno di cui calcolare il martedi grasso >>"
-  primo_anno <- getLine
-  putStrLn "Inserisci il secondo anno di cui calcolare il giovedi grasso >>"
-  secondo_anno <- getLine
-
-
-  -- validazione dei dati acquisiti
-  case (readMaybe primo_anno :: Maybe Int, readMaybe secondo_anno :: Maybe Int) of
-	  -- se entrambi i dati acquisiti sono cifre
-    (Just primo, Just secondo)  -> do 
-	  -- controlla se sono cifre valide secondo la specifica del problema
-      if not (controlla_acquisizione (read primo_anno :: Int)) || not (controlla_acquisizione (read secondo_anno :: Int))
-        then do
-          putStrLn "Input non validi, riprova!!"
-          acquisisci_anni
-        else return (read primo_anno, read secondo_anno)
-	    -- se entrambi i dati acquisiti non sono cifre, ma lettere
-    (Nothing, Nothing) -> do
-      putStrLn "Gli anni devono essere dei numeri interi, riprova!"
-      acquisisci_anni
-	  -- se solo il secondo anno è costituito da lettere
-    (Just primo, Nothing) -> do 
-      putStrLn "Il secondo anno deve essere un intero, riprova!"
-      acquisisci_anni
-    -- se sono il primo anno è costuituito da lettere
-    (Nothing, Just secondo) -> do
-      putStrLn "il primo anno deve essere un intero, riprova!"
-      acquisisci_anni
-
-
+        dataCombinata =  foldl1 (zipWith(++)) $ giornoAscii ++ spazioTraGiornoMese ++ meseAscii
+        --dataCombinata = zipWith3 (\cifre spazio lettere -> cifre ++ spazio ++ lettere) cifreCombinate spazioTraGiornoMese lettereCombinate
+{- Funzione IO ricorsiva che prende da tastiera due anni validi tra 1900-2099 incluso -}
+acquisisciAnno :: GiornoGrasso -> IO Int
+acquisisciAnno giornoGrasso = do
+                              case giornoGrasso of
+                                MartedìGrasso -> putStrLn "Inserisci l'anno per calcolare il Martedì Grasso >>"
+                                GiovedìGrasso -> putStrLn "Inserisci l'anno per calcolare il Giovedì Grasso >>"
+                              convalidaAnno
+convalidaAnno :: IO Int 
+convalidaAnno = do 
+                anno <- getLine 
+                -- validazione dei dati acquisiti
+                case readMaybe anno of
+                  (Just anno) | controllaAnno anno -> return anno
+                  _ -> do 
+                     putStrLn "Input non valido. L'anno deve essere tra 1900 e 2099."
+                     convalidaAnno
 -- dichiarazione della funzione per effettuare il controllo
 -- di validità degli anni acquisiti. 
 -- Controlla se le date non siano più piccole del 1900 e più
 -- grandi del 2099. 
 -- Riceve in ingresso l'anno appena acquisito e restistuisce
 -- l'esito della verifica
-controlla_acquisizione :: Int -> Bool
-controlla_acquisizione anno_acquisito
-  | anno_acquisito < 1900 || anno_acquisito > 2099 = False
-  | otherwise = True
+controllaAnno :: Anno -> Bool
+controllaAnno anno = anno >= 1900 && anno <= 2099
 
--- Converte una cifra (0-9) nella rappresentazione ASCII
-prendiCifreAscii :: Int -> [String]
-prendiCifreAscii n
-    | n >= 0 && n <= 9 = cifreAscii !! n
-    | otherwise = ["  ?  ", "  ?  ", "  ?  ", "  ?  ", "  ?  "]
 
--- Converte mese nella rappresentazione ASCII
-mesiAsciiMap ::Mese -> [[String]]
-mesiAsciiMap Febbraio =
-     [["***** ",
-       "*     ",
-       "***** ",
-       "*     ",
-       "*     "],
-      ["***** ",
-       "*     ",
-       "***** ",
-       "*     ",
-       "***** "],
-      ["**** ",
-       "*   *",
-       "**** ",
-       "*   *",
-       "**** "]]
-mesiAsciiMap Marzo =
-     [["*   * ",
-       "** ** ",
-       "* * * ",
-       "*   * ",
-       "*   * "],
-      ["***** ",
-       "*   * ",
-       "***** ",
-       "*   * ",
-       "*   * "],
-      ["*****",
-       "*   *",
-       "*****",
-       "*  * ",
-       "*   *"]]
-mesiAsciiMap Aprile =
-     [["***** ",
-       "*   * ",
-       "***** ",
-       "*   * ",
-       "*   * "],
-      ["***** ",
-       "*   * ",
-       "***** ",
-       "*     ",
-       "*     "],
-      ["**** ",
-       "*   *",
-       "**** ",
-       "*  * ",
-       "*   *"]]
-     
--- Database di cifre ASCII 5x5
-cifreAscii :: [[String]]
-cifreAscii =
-    [ -- 0
-      ["*****",
-       "*   *",
-       "*   *",
-       "*   *",
-       "*****"],
-      -- 1
-      ["  *  ",
-       " **  ",
-       "* *  ",
-       "  *  ",
-       "*****"],
-      -- 2
-      ["*****",
-       "    *",
-       "*****",
-       "*    ",
-       "*****"],
-      -- 3
-      ["*****",
-       "    *",
-       "*****",
-       "    *",
-       "*****"],
-      -- 4
-      ["*   *",
-       "*   *",
-       "*****",
-       "    *",
-       "    *"],
-      -- 5
-      ["*****",
-       "*    ",
-       "*****",
-       "    *",
-       "*****"],
-      -- 6
-      ["*****",
-       "*    ",
-       "*****",
-       "*   *",
-       "*****"],
-      -- 7
-      ["*****",
-       "    *",
-       "    *",
-       "    *",
-       "    *"],
-      -- 8
-      ["*****",
-       "*   *",
-       "*****",
-       "*   *",
-       "*****"],
-      -- 9
-      ["*****",
-       "*   *",
-       "*****",
-       "    *",
-       "*****"]
-    ]
+{- Funzione che converte Mese nella sua rappresentazione ASCII art:
+ - l'argomento è il mese da trasformare -}
+meseInAsciiArt ::Mese -> [[String]]
+meseInAsciiArt mese | mese == Febbraio = [["***** ",
+                                           "*     ",
+                                           "***** ",
+                                           "*     ",
+                                           "*     "],
+                                          ["***** ",
+                                           "*     ",
+                                           "***** ",
+                                           "*     ",
+                                           "***** "],
+                                          ["**** ",
+                                           "*   *",
+                                           "**** ",
+                                           "*   *",
+                                           "**** "]]
+                    | mese == Marzo =    [["*   * ",
+                                           "** ** ",
+                                           "* * * ",
+                                           "*   * ",
+                                           "*   * "],
+                                          ["***** ",
+                                           "*   * ",
+                                           "***** ",
+                                           "*   * ",
+                                           "*   * "],
+                                          ["*****",
+                                           "*   *",
+                                           "*****",
+                                           "*  * ",
+                                           "*   *"]]
+                    | mese == Aprile =   [["***** ",
+                                           "*   * ",
+                                           "***** ",
+                                           "*   * ",
+                                           "*   * "],
+                                          ["***** ",
+                                           "*   * ",
+                                           "***** ",
+                                           "*     ",
+                                           "*     "],
+                                          ["**** ",
+                                           "*   *",
+                                           "**** ",
+                                           "*  * ",
+                                           "*   *"]]
+   
+{- Funzione che restituisce ASCII art di una cifra:
+ - l'argomento è la cifra da cui prendere l'ASCII art -}
+cifraInAsciiArt :: Int -> [String]
+cifraInAsciiArt n | n == 0 = ["*****",
+                              "*   *",
+                              "*   *",
+                              "*   *",
+                              "*****"]
+                  | n == 1 = ["  *  ",
+                              " **  ",
+                              "* *  ",
+                              "  *  ",
+                              "*****"]
+                  | n == 2 = ["*****",
+                              "    *",
+                              "*****",
+                              "*    ",
+                              "*****"]
+                  | n == 3 = ["*****",
+                              "    *",
+                              "*****",
+                              "    *",
+                              "*****"]
+                  | n == 4 = ["*   *",
+                              "*   *",
+                              "*****",
+                              "    *",
+                              "    *"]
+                  | n == 5 = ["*****",
+                              "*    ",
+                              "*****",
+                              "    *",
+                              "*****"]
+                  | n == 6 = ["*****",
+                              "*    ",
+                              "*****",
+                              "*   *",
+                              "*****"]
+                  | n == 7 = ["*****",
+                              "    *",
+                              "    *",
+                              "    *",
+                              "    *"]
+                  | n == 8 = ["*****",
+                              "*   *",
+                              "*****",
+                              "*   *",
+                              "*****"]
+                  | n == 9 = ["*****",
+                              "*   *",
+                              "*****",
+                              "    *",
+                              "*****"]
+                  | otherwise = ["  ?  ", "  ?  ", "  ?  ", "  ?  ", "  ?  "]
+
 
 main :: IO ()
 
 -- definizione della funzione principale
 main = do
-
-  -- acquisizione dei due anni
-  anni_acquisiti <- acquisisci_anni
-
-  -- prendo il primo anno dalla tupla restituita
-  -- prendo il secondo anno dalla tupla restituita
-  let primo_anno = fst anni_acquisiti 
-  let secondo_anno = snd anni_acquisiti
+  putStrLn("Programma per il calcolo di Giovedì e Venerdì Grasso secondo il calendario Gregoriano")
+  -- acquisizione dei due anni 
+  primoAnno <- acquisisciAnno MartedìGrasso
+  secondoAnno <- acquisisciAnno GiovedìGrasso
   -- calcolo e stampo il valore del martedi e del giovedi grasso
-  putStrLn (mostra_data (calcola_martedi_giovedi_grasso Martedi (calcolo_pasqua primo_anno)))
-  putStrLn (mostra_data (calcola_martedi_giovedi_grasso Giovedi (calcolo_pasqua secondo_anno)))
+  putStrLn (formattaDataAscii (calcolaGiornoGrasso MartedìGrasso (calcoloPasqua primoAnno)))
+  putStrLn (formattaDataAscii (calcolaGiornoGrasso GiovedìGrasso (calcoloPasqua secondoAnno)))
