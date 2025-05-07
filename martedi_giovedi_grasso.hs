@@ -254,7 +254,7 @@ main :: IO ()
 
 -- definizione della funzione principale
 main = do
-  putStrLn("Programma per il calcolo di Giovedì e Venerdì Grasso secondo il calendario Gregoriano")
+  putStrLn("Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano")
   -- acquisizione dei due anni 
   primoAnno <- acquisisciAnno MartedìGrasso
   secondoAnno <- acquisisciAnno GiovedìGrasso

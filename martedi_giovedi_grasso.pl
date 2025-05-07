@@ -91,4 +91,26 @@ mese_ascii(Mese,AsciiArt) :-
      (Mese == aprile -> AsciiArt = [[" *** ","*   *","*****","*   *","*   *"],
                                     ["**** ","*   *","**** ","*    ","*    "],
                                     ["**** ","*   *","**** ","*  * ","*   *"]]).
-        
+
+acquisisci_anno(Turno, AnnoScelto) :- 
+    (Turno == false -> acquisisci_primo_anno(); acquisisci_secondo_anno()).
+
+acquisisci_primo_anno(AnnoScelto) :-
+    write("Inserisci l'anno per calcolare il Martedì Grasso >>"),
+    read(PrimoAnno),
+    (PrimoAnno < 1900; PrimoAnno > 2099) -> stampa_errore(), acquisisci_primo_anno().
+    AnnoScelto is PrimoAnno.
+
+acquisisci_secondo_anno(AnnoScelto) :- 
+    write("Inserisci l'anno per calcolare il Giovedì Grasso >>"),
+    read(SecondoAnno),
+    (SecondoAnno < 1900; SecondoAnno > 2099) -> stampa_errore(), acquisisci_secondo_anno().
+    AnnoScelto is SecondoAnno.
+
+stampa_errore() :-
+    write("Input non valido. L'anno deve essere tra 1900 e 2099").
+
+programma :- 
+    write("Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano").
+    acquisisci_anno(true, PrimoAnno).
+    acquisisci_anno(false, SecondoAnno).
