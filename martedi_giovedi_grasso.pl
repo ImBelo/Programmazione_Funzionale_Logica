@@ -94,7 +94,7 @@ mese_ascii(Mese,AsciiArt) :-
 
 
 acquisisci_primo_anno(AnnoScelto) :-
-    write('Inserisci l\anno per calcolare il Martedì Grasso >> '),
+    write('Inserisci l''anno per calcolare il Martedì Grasso >> '),
     catch(
         (
             read(PrimoAnno),
@@ -109,7 +109,7 @@ acquisisci_primo_anno(AnnoScelto) :-
     ).
 
 acquisisci_secondo_anno(AnnoScelto) :-
-    write('Inserisci lanno per calcolare il Giovedì Grasso >> '),
+    write('Inserisci l''anno per calcolare il Giovedì Grasso >> '),
     catch(
         (
             read(SecondoAnno),
@@ -137,7 +137,7 @@ controlla_anno(Acquisizione, AnnoLetto, AnnoRestituire) :-
 
 
 stampa_errore :-
-    write('Input non valido. L\anno deve essere tra 1900 e 2099.\n').
+    write('Input non valido. L''anno deve essere tra 1900 e 2099.\n').
 
 programma :-
     write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano'), nl,
