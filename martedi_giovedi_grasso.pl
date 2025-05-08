@@ -97,7 +97,7 @@ acquisisci_anno(Turno, AnnoScelto) :-
     ; acquisisci_secondo_anno(AnnoScelto)).
 
 acquisisci_primo_anno(AnnoScelto) :-
-    write("Inserisci l'anno per calcolare il Martedì Grasso >>"),
+    write('Inserisci l\anno per calcolare il Martedì Grasso >>'),
     read(PrimoAnno),
     ( ( PrimoAnno < 1900 ; PrimoAnno > 2099 ) ->
         ( write('Errore: anno non valido.'), nl,
@@ -108,21 +108,21 @@ acquisisci_primo_anno(AnnoScelto) :-
 
 
 acquisisci_secondo_anno(AnnoScelto) :-
-    write("Inserisci l'anno per calcolare il Giovedì Grasso >> "),
+    write('Inserisci l\anno per calcolare il Giovedì Grasso >>.'),
     read(SecondoAnno),
-   ((SecondoAnno < 1900 ; SecondoAnno > 2099) -> ( write("Errore: anno non valido."), nl, acquisisci_secondo_anno(AnnoScelto) )
+   ((SecondoAnno < 1900 ; SecondoAnno > 2099) -> ( write('Errore: anno non valido.'), nl, acquisisci_secondo_anno(AnnoScelto) )
    ;
         AnnoScelto = SecondoAnno
     ).
 
 stampa_errore :-
-    write("Input non valido. L'anno deve essere tra 1900 e 2099.\n").
+    write('Input non valido. L\anno deve essere tra 1900 e 2099.\n').
 
 programma :-
-    write("Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano\n").
-    acquisisci_anno(true, PrimoAnno).
-    acquisisci_anno(false, SecondoAnno).
-    calcola_martedi_grasso(PrimoAnno, MartediGrasso).
-    calcola_giovedi_grasso(SecondoAnno, GiovediGrasso).
-    write("Martedì Grasso: "), write(MartediGrasso), nl.
-    write("Giovedì Grasso: "), write(GiovediGrasso), nl.
+    write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano'), nl,
+    acquisisci_anno(true, PrimoAnno),
+    acquisisci_anno(false, SecondoAnno),
+    calcola_martedi_grasso(PrimoAnno, MartediGrasso),
+    calcola_giovedi_grasso(SecondoAnno, GiovediGrasso),
+    write('Martedì Grasso: '), write(MartediGrasso), nl,
+    write('Giovedì Grasso: '), write(GiovediGrasso), nl.
