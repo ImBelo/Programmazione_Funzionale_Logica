@@ -94,22 +94,42 @@ mese_ascii(Mese,AsciiArt) :-
 
 
 acquisisci_primo_anno(AnnoScelto) :-
-    write('Inserisci l\anno per calcolare il Martedì Grasso >>'),
-    catch( (read(PrimoAnno), controlla_anno(true, PrimoAnno, AnnoScelto)), _Errore, (write('Errore: non inserire lettere'), nl, acquisisci_primo_anno(AnnoScelto))
+    write('Inserisci l\anno per calcolare il Martedì Grasso >> '),
+    catch(
+        (
+            read(PrimoAnno),
+            controlla_anno(true, PrimoAnno, AnnoScelto)
+        ),
+        _Errore,
+        (
+            stampa_errore,
+            nl,
+            acquisisci_primo_anno(AnnoScelto)
+        )
     ).
-
 
 acquisisci_secondo_anno(AnnoScelto) :-
-    write('Inserisci l\anno per calcolare il Giovedì Grasso >>'),
-    catch( (read(SecondoAnno), controlla_anno(false, SecondoAnno, AnnoScelto)), _Errore, (write('Errore: non inserire lettere'), nl, acquisisci_secondo_anno(AnnoScelto))
+    write('Inserisci lanno per calcolare il Giovedì Grasso >> '),
+    catch(
+        (
+            read(SecondoAnno),
+            controlla_anno(false, SecondoAnno, AnnoScelto)
+        ),
+        _Errore,
+        (
+            stampa_errore,
+            nl,
+            acquisisci_secondo_anno(AnnoScelto)
+        )
     ).
+
     
 controlla_anno(Acquisizione, AnnoLetto, AnnoRestituire) :- 
     ( (AnnoLetto < 1900 ; AnnoLetto > 2099) ->
         ( Acquisizione == true ->
-            write('Errore: anno non valido'), nl, acquisisci_primo_anno(AnnoRestituire)
+            stampa_errore, nl, acquisisci_primo_anno(AnnoRestituire)
         ;
-            write('Errore: anno non valido'), nl, acquisisci_secondo_anno(AnnoRestituire)
+            stampa_errore, nl, acquisisci_secondo_anno(AnnoRestituire)
         )
     ;
         AnnoRestituire = AnnoLetto
