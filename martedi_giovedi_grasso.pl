@@ -215,12 +215,19 @@ stampa_errore :-
     write('Input non valido. L''anno deve essere tra 1900 e 2099.\n').
 
 stampa_caratteri_giganti(Giorno, Mese) :-
-   giorno_ascii(Giorno, Codifica),
-   mese_ascii(Mese, CodificaMese),
-   string_concat(Codifica, " ", CodificaMese, DataDaStampare),
+   Risultato = Giorno / 10,
+   ((Risultato == 0) -> 
+    giorno_ascii(Risultato, CodificaFattore),
+    giorno_ascii(Giorno, CodificaGiorno)
+   ;
+    giorno_ascii(Risultato, CodificaFattore),
+    giorno_ascii(Giorno mod 10, CodificaGiorno)
+   )
+
+   string_concat(CodificaFattore, "", CodificaGiorno, GiornoFormattato)
+   mese_ascii(Mese, MeseFormattato),
+   string_concat(GiornoFormattato, " ", MeseFormattato, DataDaStampare),
    write(DataDaStampare).
-
-
 
 programma :-
     write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano'), nl,
