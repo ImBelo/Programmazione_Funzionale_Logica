@@ -121,8 +121,8 @@ giorno_ascii(Num, GiornoCodificato) :-
                                       ' ****', 
                                       '    *', 
                                       ' *** ']).
-mese_ascii(Mese,AsciiArt) :- 
-     (Mese == febbraio -> AsciiArt = [["*****",
+mese_ascii(Mese, MeseCodificato) :- 
+     (Mese == febbraio -> MeseCodificato = [["*****",
                                        "*    ",
                                        "*****",
                                        "*    ",
@@ -137,7 +137,7 @@ mese_ascii(Mese,AsciiArt) :-
                                        "**** ",
                                        "*   *",
                                        "**** "]]);
-     (Mese == marzo -> AsciiArt = [["*   *",
+     (Mese == marzo -> MeseCodificato = [["*   *",
                                     "* * *",
                                     "*   *",
                                     "*   *",
@@ -152,7 +152,7 @@ mese_ascii(Mese,AsciiArt) :-
                                     "**** ",
                                     "*  * ",
                                     "*   *"]]);
-     (Mese == aprile -> AsciiArt = [[" *** ",
+     (Mese == aprile -> MeseCodificato = [[" *** ",
                                      "*   *",
                                      "*****",
                                      "*   *",
