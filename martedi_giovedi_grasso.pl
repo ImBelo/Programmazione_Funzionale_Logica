@@ -234,6 +234,6 @@ programma :-
     acquisisci_primo_anno(PrimoAnno),
     acquisisci_secondo_anno(SecondoAnno),
     calcola_martedi_grasso(PrimoAnno, MartediGrasso),
+    stampa_caratteri_giganti(), nl,
     calcola_giovedi_grasso(SecondoAnno, GiovediGrasso),
-    write('Martedì Grasso: '), write(MartediGrasso), nl,
-    write('Giovedì Grasso: '), write(GiovediGrasso), nl.
+    stampa_caratteri_giganti(), nl.
