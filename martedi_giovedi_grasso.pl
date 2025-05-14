@@ -222,7 +222,7 @@ stampa_caratteri_giganti(Giorno, Mese) :-
    ;
     giorno_ascii(Risultato, CodificaFattore),
     giorno_ascii(Giorno mod 10, CodificaGiorno)
-   )
+   ),
 
    string_concat(CodificaFattore, "", CodificaGiorno, GiornoFormattato),
    mese_ascii(Mese, MeseFormattato),
