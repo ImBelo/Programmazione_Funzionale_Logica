@@ -224,10 +224,10 @@ stampa_caratteri_giganti(Giorno, Mese) :-
     giorno_ascii(Giorno mod 10, CodificaGiorno)
    )
 
-   string_concat(CodificaFattore, "", CodificaGiorno, GiornoFormattato)
+   string_concat(CodificaFattore, "", CodificaGiorno, GiornoFormattato),
    mese_ascii(Mese, MeseFormattato),
    string_concat(GiornoFormattato, " ", MeseFormattato, DataDaStampare),
-   write(DataDaStampare).
+   write(DataDaStampare), nl.
 
 programma :-
     write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano'), nl,
