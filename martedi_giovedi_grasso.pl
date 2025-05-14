@@ -70,28 +70,103 @@ calcola_martedi_giovedi_grasso(martedi, Anno, MartediGrasso, _) :-
 calcola_martedi_giovedi_grasso(giovedi, Anno, _, GiovediGrasso) :-
     calcola_giovedi_grasso(Anno, GiovediGrasso).       
 
-ascii_art(Num, AsciiArt) :-
-    (Num =:= 0 -> AsciiArt = [' *** ', '*   *', '*   *', '*   *', ' *** ']),
-    (Num =:= 1 -> AsciiArt = ['   * ', '  ** ', '   * ', '   * ', '  ***']),
-    (Num =:= 2 -> AsciiArt = ['  ***', '    *', ' *** ', '*    ', '*****']),
-    (Num =:= 3 -> AsciiArt = [' *** ', '    *', ' *** ', '    *', ' *** ']),
-    (Num =:= 4 -> AsciiArt = ['*   *', '*   *', '*****', '    *', '    *']),
-    (Num =:= 5 -> AsciiArt = ['*****', '*    ', '**** ', '    *', '**** ']),
-    (Num =:= 6 -> AsciiArt = [' *** ', '*    ', '**** ', '*   *', ' *** ']),
-    (Num =:= 7 -> AsciiArt = ['*****', '    *', '   * ', '  *  ', ' *   ']),
-    (Num =:= 8 -> AsciiArt = [' *** ', '*   *', ' *** ', '*   *', ' *** ']),
-    (Num =:= 9 -> AsciiArt = [' *** ', '*   *', ' ****', '    *', ' *** ']).
+giorno_ascii(Num, GiornoCodificato) :-
+    (Num =:= 0 -> GiornoCodificato = [' *** ', 
+                                      '*   *', 
+                                      '*   *', 
+                                      '*   *', 
+                                      ' *** ']),
+    (Num =:= 1 -> GiornoCodificato = ['   * ', 
+                                      '  ** ', 
+                                      '   * ',
+                                      '   * ',
+                                      '  ***']),
+    (Num =:= 2 -> GiornoCodificato = ['  ***', 
+                                      '    *', 
+                                      ' *** ', 
+                                      '*    ', 
+                                      '*****']),
+    (Num =:= 3 -> GiornoCodificato = [' *** ', 
+                                      '    *', 
+                                      ' *** ', 
+                                      '    *', 
+                                      ' *** ']),
+    (Num =:= 4 -> GiornoCodificato = ['*   *', 
+                                      '*   *', 
+                                      '*****', 
+                                      '    *', 
+                                      '    *']),
+    (Num =:= 5 -> GiornoCodificato = ['*****', 
+                                      '*    ', 
+                                      '**** ', 
+                                      '    *', 
+                                      '**** ']),
+    (Num =:= 6 -> GiornoCodificato = [' *** ', 
+                                      '*    ', 
+                                      '**** ', 
+                                      '*   *', 
+                                      ' *** ']),
+    (Num =:= 7 -> GiornoCodificato = ['*****', 
+                                      '    *', 
+                                      '   * ', 
+                                      '  *  ', 
+                                      ' *   ']),
+    (Num =:= 8 -> GiornoCodificato = [' *** ', 
+                                      '*   *', 
+                                      ' *** ', 
+                                      '*   *', 
+                                      ' *** ']),
+    (Num =:= 9 -> GiornoCodificato = [' *** ', 
+                                      '*   *', 
+                                      ' ****', 
+                                      '    *', 
+                                      ' *** ']).
 mese_ascii(Mese,AsciiArt) :- 
-     (Mese == febbraio -> AsciiArt = [["*****","*    ","*****","*    ","*    "],
-                                      ["*****","*    ","*****","*    ","*****"],
-                                      ["**** ","*   *","**** ","*   *","**** "]]);
-     (Mese == marzo -> AsciiArt = [["*   *","* * *","*   *","*   *","*   *"],
-                                   [" *** ","*   *","*****","*   *","*   *"],
-                                   ["**** ","*   *","**** ","*  * ","*   *"]]);
-     (Mese == aprile -> AsciiArt = [[" *** ","*   *","*****","*   *","*   *"],
-                                    ["**** ","*   *","**** ","*    ","*    "],
-                                    ["**** ","*   *","**** ","*  * ","*   *"]]).
-
+     (Mese == febbraio -> AsciiArt = [["*****",
+                                       "*    ",
+                                       "*****",
+                                       "*    ",
+                                       "*    "],
+                                      ["*****",
+                                       "*    ",
+                                       "*****",
+                                       "*    ",
+                                       "*****"],
+                                      ["**** ",
+                                       "*   *",
+                                       "**** ",
+                                       "*   *",
+                                       "**** "]]);
+     (Mese == marzo -> AsciiArt = [["*   *",
+                                    "* * *",
+                                    "*   *",
+                                    "*   *",
+                                    "*   *"],
+                                   [" *** ",
+                                    "*   *",
+                                    "*****",
+                                    "*   *",
+                                    "*   *"],
+                                   ["**** ",
+                                    "*   *",
+                                    "**** ",
+                                    "*  * ",
+                                    "*   *"]]);
+     (Mese == aprile -> AsciiArt = [[" *** ",
+                                     "*   *",
+                                     "*****",
+                                     "*   *",
+                                     "*   *"],
+                                    ["**** ",
+                                     "*   *",
+                                     "**** ",
+                                     "*    ",
+                                     "*    "],
+                                    ["**** ",
+                                     "*   *",
+                                     "**** ",
+                                     "*  * ",
+                                     "*   *"]]).
 
 acquisisci_primo_anno(AnnoScelto) :-
     write('Inserisci l''anno per calcolare il Martedì Grasso >> '),
@@ -138,6 +213,14 @@ controlla_anno(Acquisizione, AnnoLetto, AnnoRestituire) :-
 
 stampa_errore :-
     write('Input non valido. L''anno deve essere tra 1900 e 2099.\n').
+
+stampa_caratteri_giganti(Giorno, Mese) :-
+   giorno_ascii(Giorno, Codifica),
+   mese_ascii(Mese, CodificaMese),
+   string_concat(Codifica, " ", CodificaMese, DataDaStampare),
+   write(DataDaStampare).
+
+
 
 programma :-
     write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano'), nl,
