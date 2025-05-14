@@ -233,6 +233,7 @@ programma :-
     write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano'), nl,
     acquisisci_primo_anno(PrimoAnno),
     acquisisci_secondo_anno(SecondoAnno),
+    % TODO -> da testare
     calcola_martedi_grasso(PrimoAnno, MartediGrasso),
     stampa_caratteri_giganti(), nl,
     calcola_giovedi_grasso(SecondoAnno, GiovediGrasso),
