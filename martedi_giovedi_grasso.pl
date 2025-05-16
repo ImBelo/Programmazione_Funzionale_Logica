@@ -214,15 +214,17 @@ controlla_anno(Acquisizione, AnnoLetto, AnnoRestituire) :-
 stampa_errore :-
     write('Input non valido. L''anno deve essere tra 1900 e 2099.\n').
     
-stampa_gigante(CaratteriCodificati) :-
-    stampa_righe_giganti(0, CaratteriCodificati).
+stampa_gigante(Caratteri1, Caratteri2) :-
+    stampa_righe_giganti(0, Caratteri1, Caratteri2).
 
-stampa_righe_giganti(5, _) :- !.
-stampa_righe_giganti(RigaIndex, Caratteri) :-
-    stampa_riga(RigaIndex, Caratteri),
+stampa_righe_giganti(5, _, _) :- !.
+stampa_righe_giganti(RigaIndex, Caratteri1, Caratteri2) :-
+    stampa_riga(RigaIndex, Caratteri1),
+    write('   '),  % Spazio tra primo e secondo gruppo
+    stampa_riga(RigaIndex, Caratteri2),
     nl,
     Next is RigaIndex + 1,
-    stampa_righe_giganti(Next, Caratteri).
+    stampa_righe_giganti(Next, Caratteri1, Caratteri2).
 
 stampa_riga(_, []).
 stampa_riga(Index, [Lettera | Resto]) :-
@@ -231,14 +233,14 @@ stampa_riga(Index, [Lettera | Resto]) :-
     stampa_riga(Index, Resto).
 
 
+
 stampa_caratteri_gigati(Giorno, Mese) :-
       Unita is Giorno // 10,
       Decina is Giorno mod 10,
       giorno_ascii(Unita, UnitaCodificata),
       giorno_ascii(Decina, DecinaCodificata),
       mese_ascii(Mese, MeseCodificato),
-      stampa_gigante([UnitaCodificata, DecinaCodificata]),
-      stampa_gigante(MeseCodificato).
+      stampa_gigante([UnitaCodificata, DecinaCodificata], MeseCodificato).
     
 
 
