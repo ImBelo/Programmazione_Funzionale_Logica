@@ -71,52 +71,52 @@ calcola_martedi_giovedi_grasso(giovedi, Anno, _, GiovediGrasso) :-
     calcola_giovedi_grasso(Anno, GiovediGrasso).       
 
 giorno_ascii(Num, GiornoCodificato) :-
-    (Num =:= 0 -> GiornoCodificato = [' *** ', 
+    (Num == 0 -> GiornoCodificato = [' *** ', 
                                       '*   *', 
                                       '*   *', 
                                       '*   *', 
-                                      ' *** ']),
-    (Num =:= 1 -> GiornoCodificato = ['   * ', 
+                                      ' *** ']);
+    (Num == 1 -> GiornoCodificato = ['   * ', 
                                       '  ** ', 
                                       '   * ',
                                       '   * ',
-                                      '  ***']),
-    (Num =:= 2 -> GiornoCodificato = ['  ***', 
+                                      '  ***']);
+    (Num == 2 -> GiornoCodificato = ['  ***', 
                                       '    *', 
                                       ' *** ', 
                                       '*    ', 
-                                      '*****']),
-    (Num =:= 3 -> GiornoCodificato = [' *** ', 
+                                      '*****']);
+    (Num == 3 -> GiornoCodificato = [' *** ', 
                                       '    *', 
                                       ' *** ', 
                                       '    *', 
-                                      ' *** ']),
-    (Num =:= 4 -> GiornoCodificato = ['*   *', 
+                                      ' *** ']);
+    (Num == 4 -> GiornoCodificato = ['*   *', 
                                       '*   *', 
                                       '*****', 
                                       '    *', 
-                                      '    *']),
-    (Num =:= 5 -> GiornoCodificato = ['*****', 
+                                      '    *']);
+    (Num == 5 -> GiornoCodificato = ['*****', 
                                       '*    ', 
                                       '**** ', 
                                       '    *', 
-                                      '**** ']),
-    (Num =:= 6 -> GiornoCodificato = [' *** ', 
+                                      '**** ']);
+    (Num == 6 -> GiornoCodificato = [' *** ', 
                                       '*    ', 
                                       '**** ', 
                                       '*   *', 
-                                      ' *** ']),
-    (Num =:= 7 -> GiornoCodificato = ['*****', 
+                                      ' *** ']);
+    (Num == 7 -> GiornoCodificato = ['*****', 
                                       '    *', 
                                       '   * ', 
                                       '  *  ', 
-                                      ' *   ']),
-    (Num =:= 8 -> GiornoCodificato = [' *** ', 
+                                      ' *   ']);
+    (Num == 8 -> GiornoCodificato = [' *** ', 
                                       '*   *', 
                                       ' *** ', 
                                       '*   *', 
-                                      ' *** ']),
-    (Num =:= 9 -> GiornoCodificato = [' *** ', 
+                                      ' *** ']);
+    (Num == 9 -> GiornoCodificato = [' *** ', 
                                       '*   *', 
                                       ' ****', 
                                       '    *', 
@@ -214,27 +214,27 @@ controlla_anno(Acquisizione, AnnoLetto, AnnoRestituire) :-
 stampa_errore :-
     write('Input non valido. L''anno deve essere tra 1900 e 2099.\n').
 
-stampa_caratteri_giganti(Giorno, Mese) :-
-   Risultato = Giorno / 10,
-   ((Risultato == 0) -> 
-    giorno_ascii(Risultato, CodificaFattore),
-    giorno_ascii(Giorno, CodificaGiorno)
-   ;
-    giorno_ascii(Risultato, CodificaFattore),
-    giorno_ascii(Giorno mod 10, CodificaGiorno)
-   ),
+stampa_caratteri_gigati(Giorno, Mese) :-
+    ((Giorno < 10) ->
+        (giorno_ascii(0, GiornoCodificato),
+        write(GiornoCodificato), nl,
+        giorno_ascci(Giorno, GiornoCodificato2),
+        write(GiornoCodificato2), nl)
+    ;
+        write('OSS'),
+        write(Mese), nl
+    ).
 
-   string_concat(CodificaFattore, "", CodificaGiorno, GiornoFormattato),
-   mese_ascii(Mese, MeseFormattato),
-   string_concat(GiornoFormattato, " ", MeseFormattato, DataDaStampare),
-   write(DataDaStampare), nl.
 
 programma :-
     write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano'), nl,
     acquisisci_primo_anno(PrimoAnno),
-    acquisisci_secondo_anno(SecondoAnno),
-    % TODO -> da testare
     calcola_martedi_grasso(PrimoAnno, MartediGrasso),
-    stampa_caratteri_giganti(), nl,
+    write(MartediGrasso), nl,
+    data(Giorno, Mese, _) = MartediGrasso,
+    
+    stampa_caratteri_gigati(Giorno, Mese),
+    
+    acquisisci_secondo_anno(SecondoAnno),
     calcola_giovedi_grasso(SecondoAnno, GiovediGrasso),
-    stampa_caratteri_giganti(), nl.
+    write(GiovediGrasso), nl.
