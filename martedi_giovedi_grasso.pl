@@ -234,7 +234,7 @@ stampa_riga(Index, [Lettera | Resto]) :-
 
 
 
-stampa_caratteri_gigati(Giorno, Mese) :-
+stampa_caratteri_giganti(Giorno, Mese) :-
       Unita is Giorno // 10,
       Decina is Giorno mod 10,
       giorno_ascii(Unita, UnitaCodificata),
@@ -249,9 +249,9 @@ programma :-
     acquisisci_primo_anno(PrimoAnno),
     calcola_martedi_grasso(PrimoAnno, MartediGrasso),
     data(Giorno, Mese, _) = MartediGrasso,
-    stampa_caratteri_gigati(Giorno, Mese),
+    stampa_caratteri_giganti(Giorno, Mese),
     
     acquisisci_secondo_anno(SecondoAnno),
     calcola_giovedi_grasso(SecondoAnno, GiovediGrasso),
     data(GiornoG, MeseG, _) = GiovediGrasso,
-    stampa_caratteri_gigati(GiornoG, MeseG).
+    stampa_caratteri_giganti(GiornoG, MeseG).
