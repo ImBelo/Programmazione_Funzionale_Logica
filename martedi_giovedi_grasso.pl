@@ -71,56 +71,56 @@ calcola_martedi_giovedi_grasso(giovedi, Anno, _, GiovediGrasso) :-
     calcola_giovedi_grasso(Anno, GiovediGrasso).       
 
 giorno_ascii(Num, GiornoCodificato) :-
-    (Num == 0 -> GiornoCodificato = [' *** ', 
-                                      '*   *', 
-                                      '*   *', 
-                                      '*   *', 
-                                      ' *** ']);
-    (Num == 1 -> GiornoCodificato = ['   * ', 
-                                      '  ** ', 
-                                      '   * ',
-                                      '   * ',
-                                      '  ***']);
-    (Num == 2 -> GiornoCodificato = ['  ***', 
-                                      '    *', 
-                                      ' *** ', 
-                                      '*    ', 
-                                      '*****']);
-    (Num == 3 -> GiornoCodificato = [' *** ', 
-                                      '    *', 
-                                      ' *** ', 
-                                      '    *', 
-                                      ' *** ']);
-    (Num == 4 -> GiornoCodificato = ['*   *', 
-                                      '*   *', 
-                                      '*****', 
-                                      '    *', 
-                                      '    *']);
-    (Num == 5 -> GiornoCodificato = ['*****', 
-                                      '*    ', 
-                                      '**** ', 
-                                      '    *', 
-                                      '**** ']);
-    (Num == 6 -> GiornoCodificato = [' *** ', 
-                                      '*    ', 
-                                      '**** ', 
-                                      '*   *', 
-                                      ' *** ']);
-    (Num == 7 -> GiornoCodificato = ['*****', 
-                                      '    *', 
-                                      '   * ', 
-                                      '  *  ', 
-                                      ' *   ']);
-    (Num == 8 -> GiornoCodificato = [' *** ', 
-                                      '*   *', 
-                                      ' *** ', 
-                                      '*   *', 
-                                      ' *** ']);
-    (Num == 9 -> GiornoCodificato = [' *** ', 
-                                      '*   *', 
-                                      ' ****', 
-                                      '    *', 
-                                      ' *** ']).
+    (Num == 0 -> GiornoCodificato = ['*****',
+                                    '*   *',
+                                    '*   *',
+                                    '*   *',
+                                    '*****']);
+    (Num == 1 -> GiornoCodificato = ['  *  ',
+                                    ' **  ',
+                                    '* *  ',
+                                    '  *  ',
+                                    '*****']);
+    (Num == 2 -> GiornoCodificato = ['*****',
+                                    '    *',
+                                    '*****',
+                                    '*    ',
+                                    '*****']);
+    (Num == 3 -> GiornoCodificato = ['*****',
+                                    '    *',
+                                    '*****',
+                                    '    *',
+                                    '*****']);
+    (Num == 4 -> GiornoCodificato = ['*   *',
+                                     '*   *',
+                                     '*****',
+                                     '    *',
+                                     '    *']);
+    (Num == 5 -> GiornoCodificato = ['*****',
+                                    '*    ',
+                                    '*****',
+                                    '    *',
+                                    '*****']);
+    (Num == 6 -> GiornoCodificato = ['*****',
+                                    '*    ',
+                                    '*****',
+                                    '*   *',
+                                    '*****']);
+    (Num == 7 -> GiornoCodificato = ['*****',
+                                    '    *',
+                                    '    *',
+                                    '    *',
+                                    '    *']);
+    (Num == 8 -> GiornoCodificato = ['*****',
+                                    '*   *',
+                                    '*****',
+                                    '*   *',
+                                    '*****']);
+    (Num == 9 -> GiornoCodificato = ['*****',
+                                    '*   *',
+                                    '*****',
+                                    '    *',
+                                    '*****']).
 mese_ascii(Mese, MeseCodificato) :- 
      (Mese == febbraio -> MeseCodificato = [['*****',
                                        '*    ',
