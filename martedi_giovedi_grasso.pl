@@ -213,28 +213,43 @@ controlla_anno(Acquisizione, AnnoLetto, AnnoRestituire) :-
 
 stampa_errore :-
     write('Input non valido. L''anno deve essere tra 1900 e 2099.\n').
+    
+stampa_gigante(CaratteriCodificati) :-
+    stampa_righe_giganti(0, CaratteriCodificati).
+
+stampa_righe_giganti(5, _) :- !.
+stampa_righe_giganti(RigaIndex, Caratteri) :-
+    stampa_riga(RigaIndex, Caratteri),
+    nl,
+    Next is RigaIndex + 1,
+    stampa_righe_giganti(Next, Caratteri).
+
+stampa_riga(_, []).
+stampa_riga(Index, [Lettera | Resto]) :-
+    nth0(Index, Lettera, Riga),
+    write(Riga), write(' '),
+    stampa_riga(Index, Resto).
+
 
 stampa_caratteri_gigati(Giorno, Mese) :-
-    ((Giorno < 10) ->
-        (giorno_ascii(0, GiornoCodificato),
-        write(GiornoCodificato), nl,
-        giorno_ascci(Giorno, GiornoCodificato2),
-        write(GiornoCodificato2), nl)
-    ;
-        write('OSS'),
-        write(Mese), nl
-    ).
+      Unita is Giorno // 10,
+      Decina is Giorno mod 10,
+      giorno_ascii(Unita, UnitaCodificata),
+      giorno_ascii(Decina, DecinaCodificata),
+      mese_ascii(Mese, MeseCodificato),
+      stampa_gigante([UnitaCodificata, DecinaCodificata]),
+      stampa_gigante(MeseCodificato).
+    
 
 
 programma :-
     write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano'), nl,
     acquisisci_primo_anno(PrimoAnno),
     calcola_martedi_grasso(PrimoAnno, MartediGrasso),
-    write(MartediGrasso), nl,
     data(Giorno, Mese, _) = MartediGrasso,
-    
     stampa_caratteri_gigati(Giorno, Mese),
     
     acquisisci_secondo_anno(SecondoAnno),
     calcola_giovedi_grasso(SecondoAnno, GiovediGrasso),
-    write(GiovediGrasso), nl.
+    data(GiornoG, MeseG, _) = GiovediGrasso,
+    stampa_caratteri_gigati(GiornoG, MeseG).
