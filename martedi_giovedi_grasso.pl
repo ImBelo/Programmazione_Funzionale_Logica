@@ -72,25 +72,25 @@ calcola_martedi_giovedi_grasso(giovedi, Anno, _, GiovediGrasso) :-
 
 giorno_ascii(Num, GiornoCodificato) :-
     (Num == 0 -> GiornoCodificato = ['*****',
-                                    '*   *',
-                                    '*   *',
-                                    '*   *',
-                                    '*****']);
+                                     '*   *',
+                                     '*   *',
+                                     '*   *',
+                                     '*****']);
     (Num == 1 -> GiornoCodificato = ['  *  ',
-                                    ' **  ',
-                                    '* *  ',
-                                    '  *  ',
-                                    '*****']);
+                                     ' **  ',
+                                     '* *  ',
+                                     '  *  ',
+                                     '*****']);
     (Num == 2 -> GiornoCodificato = ['*****',
-                                    '    *',
-                                    '*****',
-                                    '*    ',
-                                    '*****']);
+                                     '    *',
+                                     '*****',
+                                     '*    ',
+                                     '*****']);
     (Num == 3 -> GiornoCodificato = ['*****',
-                                    '    *',
-                                    '*****',
-                                    '    *',
-                                    '*****']);
+                                     '    *',
+                                     '*****',
+                                     '    *',
+                                     '*****']);
     (Num == 4 -> GiornoCodificato = ['*   *',
                                      '*   *',
                                      '*****',
@@ -107,84 +107,68 @@ giorno_ascii(Num, GiornoCodificato) :-
                                     '*   *',
                                     '*****']);
     (Num == 7 -> GiornoCodificato = ['*****',
-                                    '    *',
-                                    '    *',
-                                    '    *',
-                                    '    *']);
+                                     '    *',
+                                     '    *',
+                                     '    *',
+                                     '    *']);
     (Num == 8 -> GiornoCodificato = ['*****',
-                                    '*   *',
-                                    '*****',
-                                    '*   *',
-                                    '*****']);
-    (Num == 9 -> GiornoCodificato = ['*****',
-                                    '*   *',
-                                    '*****',
-                                    '    *',
-                                    '*****']).
-mese_ascii(Mese, MeseCodificato) :- 
-     (Mese == febbraio -> MeseCodificato = [['*****',
-                                       '*    ',
-                                       '*****',
-                                       '*    ',
-                                       '*    '],
-                                      ['*****',
-                                       '*    ',
-                                       '*****',
-                                       '*    ',
-                                       '*****'],
-                                      ['**** ',
-                                       '*   *',
-                                       '**** ',
-                                       '*   *',
-                                       '**** ']]);
-     (Mese == marzo -> MeseCodificato = [['*   *',
-                                          '* * *',
-                                    '*   *',
-                                    '*   *',
-                                    '*   *'],
-                                   [' *** ',
-                                    '*   *',
-                                    '*****',
-                                    '*   *',
-                                    '*   *'],
-                                   ['**** ',
-                                    '*   *',
-                                    '**** ',
-                                    '*  * ',
-                                    '*   *']]);
-     (Mese == aprile -> MeseCodificato = [[' *** ',
                                      '*   *',
                                      '*****',
                                      '*   *',
-                                     '*   *'],
-                                    ['**** ',
+                                     '*****']);
+    (Num == 9 -> GiornoCodificato = ['*****',
                                      '*   *',
-                                     '**** ',
-                                     '*    ',
-                                     '*    '],
-                                    ['**** ',
-                                     '*   *',
-                                     '**** ',
-                                     '*  * ',
-                                     '*   *']]).
+                                     '*****',
+                                     '    *',
+                                     '*****']).
+mese_ascii(Mese, MeseCodificato) :- 
+     (Mese == febbraio -> MeseCodificato = [['*****',
+                                           '*    ',
+                                           '*****',
+                                           '*    ',
+                                           '*    '],
+                                          ['*****',
+                                           '*    ',
+                                           '*****',
+                                           '*    ',
+                                           '*****'],
+                                          ['**** ',
+                                           '*   *',
+                                           '**** ',
+                                           '*   *',
+                                           '**** ']]);
+     (Mese == marzo -> MeseCodificato = [['*   *',
+                                          '* * *',
+                                          '*   *',
+                                          '*   *',
+                                          '*   *'],
+                                         ['*****',
+                                          '*   *',
+                                          '*****',
+                                          '*   *',
+                                          '*   *'],
+                                         ['**** ',
+                                          '*   *',
+                                          '**** ',
+                                          '*  * ',
+                                          '*   *']]);
+     (Mese == aprile -> MeseCodificato = [['*****',
+                                           '*   *',
+                                           '*****',
+                                           '*   *',
+                                           '*   *'],
+                                          ['*****',
+                                           '*   *',
+                                           '*****',
+                                           '*    ',
+                                           '*    '],
+                                          ['*****',
+                                           '*   *',
+                                           '*****',
+                                           '*  * ',
+                                           '*   *']]).
 
-acquisisci_primo_anno(AnnoScelto) :-
-    write('Inserisci l''anno per calcolare il Martedì Grasso >> '),
-    catch(
-        (
-            read(PrimoAnno),
-            controlla_anno(true, PrimoAnno, AnnoScelto)
-        ),
-        _Errore,
-        (
-            stampa_errore,
-            nl,
-            acquisisci_primo_anno(AnnoScelto)
-        )
-    ).
-
-acquisisci_secondo_anno(AnnoScelto) :-
-    write('Inserisci l''anno per calcolare il Giovedì Grasso >> '),
+acquisisci_anno(AnnoScelto) :-
     catch(
         (
             read(SecondoAnno),
@@ -193,8 +177,7 @@ acquisisci_secondo_anno(AnnoScelto) :-
         _Errore,
         (
             stampa_errore,
-            nl,
-            acquisisci_secondo_anno(AnnoScelto)
+            acquisisci_anno(AnnoScelto)
         )
     ).
 
@@ -202,9 +185,9 @@ acquisisci_secondo_anno(AnnoScelto) :-
 controlla_anno(Acquisizione, AnnoLetto, AnnoRestituire) :- 
     ( (AnnoLetto < 1900 ; AnnoLetto > 2099) ->
         ( Acquisizione == true ->
-            stampa_errore, nl, acquisisci_primo_anno(AnnoRestituire)
+            stampa_errore, acquisisci_anno(AnnoRestituire)
         ;
-            stampa_errore, nl, acquisisci_secondo_anno(AnnoRestituire)
+            stampa_errore, acquisisci_anno(AnnoRestituire)
         )
     ;
         AnnoRestituire = AnnoLetto
@@ -218,13 +201,13 @@ stampa_gigante(Caratteri1, Caratteri2) :-
     stampa_righe_giganti(0, Caratteri1, Caratteri2).
 
 stampa_righe_giganti(5, _, _) :- !.
-stampa_righe_giganti(RigaIndex, Caratteri1, Caratteri2) :-
-    stampa_riga(RigaIndex, Caratteri1),
-    write('   '),  % Spazio tra primo e secondo gruppo
-    stampa_riga(RigaIndex, Caratteri2),
+stampa_righe_giganti(RigaIndice, Caratteri1, Caratteri2) :-
+    stampa_riga(RigaIndice, Caratteri1),
+    write('    '),  % Spazio tra primo e secondo gruppo
+    stampa_riga(RigaIndice, Caratteri2),
     nl,
-    Next is RigaIndex + 1,
-    stampa_righe_giganti(Next, Caratteri1, Caratteri2).
+    Successivo is RigaIndice + 1,
+    stampa_righe_giganti(Successivo, Caratteri1, Caratteri2).
 
 stampa_riga(_, []).
 stampa_riga(Index, [Lettera | Resto]) :-
@@ -246,12 +229,13 @@ stampa_caratteri_giganti(Giorno, Mese) :-
 
 programma :-
     write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano'), nl,
-    acquisisci_primo_anno(PrimoAnno),
+    write('Inserire l'' anno per calcolare il Martedì Grasso\n'),
+    acquisisci_anno(PrimoAnno),
+    write('Inserire l'' anno per calcolare il Giovedì Grasso\n'),
+    acquisisci_anno(SecondoAnno),
     calcola_martedi_grasso(PrimoAnno, MartediGrasso),
+    calcola_giovedi_grasso(SecondoAnno, GiovediGrasso),
     data(Giorno, Mese, _) = MartediGrasso,
     stampa_caratteri_giganti(Giorno, Mese),
-    
-    acquisisci_secondo_anno(SecondoAnno),
-    calcola_giovedi_grasso(SecondoAnno, GiovediGrasso),
     data(GiornoG, MeseG, _) = GiovediGrasso,
     stampa_caratteri_giganti(GiornoG, MeseG).

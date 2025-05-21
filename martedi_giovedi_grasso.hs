@@ -118,22 +118,15 @@ formattaDataAscii giornoCalendario = unlines dataCombinata
         spazioTraGiornoMese = replicate 5 $ replicate 5 " "
         -- Combina cifre spazio e lettere insieme 
         dataCombinata =  foldl1 (zipWith(++)) $ giornoAscii ++ spazioTraGiornoMese ++ meseAscii
-{- Funzione IO ricorsiva che prende da tastiera due anni validi tra 1900-2099 incluso -}
-acquisisciAnno :: GiornoGrasso -> IO Int
-acquisisciAnno giornoGrasso = do
-                              case giornoGrasso of
-                                MartedìGrasso -> putStrLn "Inserisci l'anno per calcolare il Martedì Grasso >>"
-                                GiovedìGrasso -> putStrLn "Inserisci l'anno per calcolare il Giovedì Grasso >>"
-                              convalidaAnno
-convalidaAnno :: IO Int 
-convalidaAnno = do 
+acquisisciAnno :: IO Int 
+acquisisciAnno = do 
                 anno <- getLine 
                 -- validazione dei dati acquisiti
                 case readMaybe anno of
                   (Just anno) | controllaAnno anno -> return anno
                   _ -> do 
                      putStrLn "Input non valido. L'anno deve essere tra 1900 e 2099."
-                     convalidaAnno
+                     acquisisciAnno
 {- Funzione per controllare che l'anno sia tra 1900-2099
  - l'argomento è l'anno -}
 controllaAnno :: Anno -> Bool
@@ -256,8 +249,10 @@ main :: IO ()
 main = do
   putStrLn("Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano")
   -- acquisizione dei due anni 
-  primoAnno <- acquisisciAnno MartedìGrasso
-  secondoAnno <- acquisisciAnno GiovedìGrasso
-  -- calcolo e stampo il valore del martedi e del giovedi grasso
+  putStrLn("Inserisci l'anno per il Martedì Grasso")
+  primoAnno <- acquisisciAnno 
+  putStrLn("inserisci l'anno per il Giovedì Grasso")
+  secondoAnno <- acquisisciAnno 
+  -- stampa della data del Martedì e Giovedì Grasso
   putStrLn (formattaDataAscii (calcolaGiornoGrasso MartedìGrasso (calcoloPasqua primoAnno)))
   putStrLn (formattaDataAscii (calcolaGiornoGrasso GiovedìGrasso (calcoloPasqua secondoAnno)))
