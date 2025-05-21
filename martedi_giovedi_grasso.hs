@@ -76,6 +76,7 @@ calcoloPasqua anno
  - l'argomento è l'anno da verificare -}
 controllaBisestile :: Anno -> Bool
 controllaBisestile anno = (anno `mod` 4 == 0 && anno `mod` 100 /= 0) || (anno `mod` 400 == 0)
+
 {- Funzione che calcola la data del Martedì o Giovedì grasso 
  - il primo argomento è il giorno grasso
  - il secondo argomento è la data di pasqua dell'anno in cui si vuole calcolare i giorni grassi -}
@@ -117,6 +118,7 @@ formattaDataAscii giornoCalendario = unlines dataCombinata
         spazioTraGiornoMese = replicate 5 $ replicate 5 " "
         -- Combina cifre spazio e lettere insieme 
         dataCombinata =  foldl1 (zipWith(++)) $ giornoAscii ++ spazioTraGiornoMese ++ meseAscii
+
 acquisisciAnno :: IO Int 
 acquisisciAnno = do 
                 anno <- getLine 

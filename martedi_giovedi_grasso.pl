@@ -1,12 +1,21 @@
+/*
+ * Progetto di Programmazione Logica e Funzionale
+ * Studenti: Elia Renzoni e Gianmarco Beligni
+ * N. Matricola: 319978 321069 
+ * Sessione Estiva a.a 2024/2025
+*/
+
 mese(febbraio).
 mese(marzo).
 mese(aprile).
-precedente(febbraio,marzo).
-precedente(marzo,aprile).
-precedente(aprile,maggio).
-successivo(Mese1,Mese2):-
-  precedente(Mese2,Mese1).
+precedente(febbraio, marzo).
+precedente(marzo, aprile).
+precedente(aprile, maggio).
+successivo(Mese1, Mese2):-
+  precedente(Mese2, Mese1).
 
+/* regola che restituisce la data di Pasqua:
+  gli argomenti sono il giorno */
 pasqua(Giorno, Mese, Anno) :-
     A is Anno mod 19,
     B is Anno mod 4,
@@ -30,9 +39,16 @@ pasqua(Giorno, Mese, Anno) :-
     ; 
         Giorno = BaseG, Mese = BaseM
     ).
+
+
+
+/* regola per controllare che l'anno sia tra 1900-2099
+ l'argomento è l'anno */
 controlla_bisestile(Anno) :-
     (Anno mod 400 =:= 0; 
-     (Anno mod 100 =\= 0, Anno mod 4 =:= 0)).  
+     (Anno mod 100 =\= 0, Anno mod 4 =:= 0)).
+
+
 crea_data(Giorno, Mese, Anno) :-
     integer(Anno), Anno >= 1900, Anno =< 2099,  
     integer(Mese), Mese >= 1, Mese =< 12,
@@ -40,29 +56,41 @@ crea_data(Giorno, Mese, Anno) :-
     giorni_del_mese(GiornoMax, Mese, Anno),
     Giorno =< GiornoMax.
 
+/* regola che restituisce quanti giorno ci sono in un mese:
+  il primo argomento è il giorno
+  il secondo argomento è il mese
+  il terzo argomento è l'anno (importante per Febbraio) */
 giorni_del_mese(28, febbraio, Anno) :- \+ controlla_bisestile(Anno).
 giorni_del_mese(29, febbraio, Anno) :- controlla_bisestile(Anno).
-giorni_del_mese(31, Mese, _) :-Mese = marzo.
-giorni_del_mese(30, Mese, _) :-Mese = aprile.
+giorni_del_mese(31, Mese, _) :- Mese = marzo.
+giorni_del_mese(30, Mese, _) :- Mese = aprile.
+
+
+/* regola che calcola la sottrazione di giorni ad una data:
+  il primo argomento è il numero di giorno da sottrarre
+  il secondo argomento è la data a cui sottrarre i giorni 
+  il terzo argomento è il risultato della sottrazione */
 sottrai_giorni(Sottraendo, data(Giorno, Mese, Anno), DataArrivo) :-
     GiornoSufficiente is Giorno - Sottraendo,
     (GiornoSufficiente > 0 -> 
         DataArrivo = data(GiornoSufficiente, Mese, Anno)
     ;
-       precedente(NuovoMese,Mese),
+       precedente(NuovoMese, Mese),
        giorni_del_mese(MaxGiorni, NuovoMese, Anno),
        NuovoGiorno is Giorno - Sottraendo + MaxGiorni,
        sottrai_giorni(0, data(NuovoGiorno, NuovoMese, Anno), DataArrivo)
     ).
 
-
-calcola_martedi_grasso(Anno,MartediGrasso) :-
+/* regola che calcola la data del Martedì o Giovedì grasso 
+  il primo argomento è il giorno grasso
+  il secondo argomento è la data di pasqua dell'anno in cui si vuole calcolare i giorni grassi */
+calcola_martedi_grasso(Anno, MartediGrasso) :-
     pasqua(PGiorno, PMese, Anno),
     sottrai_giorni(47, data(PGiorno, PMese, Anno), MartediGrasso).
     
 calcola_giovedi_grasso(Anno, GiovediGrasso) :-
-    pasqua(PGiorno,PMese,Anno),
-    sottrai_giorni(52,data(PGiorno,PMese,Anno), GiovediGrasso).
+    pasqua(PGiorno, PMese, Anno),
+    sottrai_giorni(52, data(PGiorno, PMese, Anno), GiovediGrasso).
 
 calcola_martedi_giovedi_grasso(martedi, Anno, MartediGrasso, _) :-
     calcola_martedi_grasso(Anno, MartediGrasso).
@@ -70,6 +98,8 @@ calcola_martedi_giovedi_grasso(martedi, Anno, MartediGrasso, _) :-
 calcola_martedi_giovedi_grasso(giovedi, Anno, _, GiovediGrasso) :-
     calcola_giovedi_grasso(Anno, GiovediGrasso).       
 
+/* regola che restituisce ASCII art di una cifra:
+ l'argomento è la cifra da cui prendere l'ASCII art */
 giorno_ascii(Num, GiornoCodificato) :-
     (Num == 0 -> GiornoCodificato = ['*****',
                                      '*   *',
@@ -121,6 +151,9 @@ giorno_ascii(Num, GiornoCodificato) :-
                                      '*****',
                                      '    *',
                                      '*****']).
+
+/* regola che converte Mese nella sua rappresentazione ASCII art:
+ l'argomento è il mese da cui prendere l'ASCII art */
 mese_ascii(Mese, MeseCodificato) :- 
      (Mese == febbraio -> MeseCodificato = [['*****',
                                            '*    ',
@@ -182,6 +215,11 @@ acquisisci_anno(AnnoScelto) :-
     ).
 
     
+/* regola per controllare gli input inseriti dall'utente.
+   il primo parametro indica il turno d'acquisizione mentre
+   gli utlimi due parametri indicano l'input inserito dall'utente
+   e l'anno da restituire.
+*/
 controlla_anno(Acquisizione, AnnoLetto, AnnoRestituire) :- 
     ( (AnnoLetto < 1900 ; AnnoLetto > 2099) ->
         ( Acquisizione == true ->
@@ -216,7 +254,8 @@ stampa_riga(Index, [Lettera | Resto]) :-
     stampa_riga(Index, Resto).
 
 
-
+/* regola che trasforma una data nella rappesentazione ASCII art:
+ l'argomento è una data */
 stampa_caratteri_giganti(Giorno, Mese) :-
       Unita is Giorno // 10,
       Decina is Giorno mod 10,
@@ -224,9 +263,9 @@ stampa_caratteri_giganti(Giorno, Mese) :-
       giorno_ascii(Decina, DecinaCodificata),
       mese_ascii(Mese, MeseCodificato),
       stampa_gigante([UnitaCodificata, DecinaCodificata], MeseCodificato).
-    
 
 
+% definizione della regola principale
 programma :-
     write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano'), nl,
     write('Inserire l'' anno per calcolare il Martedì Grasso\n'),
