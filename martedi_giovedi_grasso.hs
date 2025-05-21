@@ -11,8 +11,7 @@ module Main where
 -- inclusione delle librerie
 import Text.Read (readMaybe)
 import Data.Char (digitToInt)
-import System.IO (hFlush, stdout)
--- definizione dei 
+
 type Giorno = Int
 type Anno = Int
 -- definizione dei tipi Mese, Giorno e Calendario
