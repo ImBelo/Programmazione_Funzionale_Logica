@@ -28,19 +28,14 @@ data Calendario = Calendario
  - l'argomento è un numero tra 1-99 incluso-}
 formattaADueCifre :: Int -> String
 formattaADueCifre n | n < 10 = "0" ++ show n 
-                     | n > 99 || n < 0 = error $ show (n) ++ "il numero deve essere tra 0 e 99" 
-                     | otherwise = show n
+                    | n > 99 || n < 0 = error $ show (n) ++ "il numero deve essere tra 0 e 99" 
+                    | otherwise = show n
 {- Funzione per la creazione del tipo Data: 
  - il primo argomento è il giorno
  - il secondo argomento è il Mese
  - il terzo argomento è l'anno-}
 creaData :: Giorno->Mese->Anno->Calendario
-creaData x Febbraio anno | x>0 && x<=(28 + fromEnum(controllaBisestile anno)) = Calendario{giorno = x,mese = Febbraio,anno = anno}
-                         | otherwise = error $ show x ++ " il giorno deve essere tra 1-" ++ show ( 28 + fromEnum(controllaBisestile anno)) 
-creaData x Marzo anno    | x>0 && x<=31 = Calendario{giorno = x,mese = Marzo,anno = anno}
-                         | otherwise = error $ show x ++ " il giorno deve essere tra 1-31"  
-creaData x Aprile anno   | x>0 && x<=30 = Calendario{giorno = x,mese = Aprile,anno = anno}
-                         | otherwise = error $ show x ++ " il giorno deve essere tra 1-30"  
+creaData x mese anno | x>0 && x<=giorniDelMese mese anno = Calendario{giorno = x,mese = Febbraio,anno = anno}
 
 {- Funzione che restituisce quanti giorno ci sono in un mese:
  - il primo argomento è il mese
@@ -248,6 +243,7 @@ main :: IO ()
 
 -- definizione della funzione principale
 main = do
+
   putStrLn("Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano")
   -- acquisizione dei due anni 
   putStrLn("Inserisci l'anno per il Martedì Grasso")

@@ -307,10 +307,10 @@ stampa_caratteri_giganti(Giorno, Mese) :-
 
 % definizione della regola principale
 programma :-
-  write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano\nl'),
-  write('Inserire l'' anno per calcolare il Martedì Grasso\n'),
+  write('Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano\n'),
+  write('Inserire l''anno per calcolare il Martedì Grasso\n'),
   acquisisci_anno(PrimoAnno),
-  write('Inserire l'' anno per calcolare il Giovedì Grasso\n'),
+  write('Inserire l''anno per calcolare il Giovedì Grasso\n'),
   acquisisci_anno(SecondoAnno),
   calcola_martedi_grasso(PrimoAnno, MartediGrasso),
   calcola_giovedi_grasso(SecondoAnno, GiovediGrasso),
