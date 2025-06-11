@@ -31,7 +31,7 @@ data Calendario = Calendario
 
 main :: IO ()
 
--- definizione della funzione principale
+-- definizione dell'azione
 main = do
 
   putStrLn("Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano")
