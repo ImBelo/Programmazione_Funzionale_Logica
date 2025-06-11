@@ -14,22 +14,47 @@ import Data.Char (digitToInt)
 
 type Giorno = Int
 type Anno = Int
+
 -- definizione dei tipi Mese, Giorno e Calendario
 data Mese = Febbraio | Marzo | Aprile
               deriving (Eq,Ord, Enum, Bounded, Show, Read)
+
 data GiornoGrasso = MartedìGrasso | GiovedìGrasso
               deriving (Eq,Ord,Enum,Show,Read)
+
 data Calendario = Calendario
   { giorno :: Giorno, 
     mese :: Mese,
     anno :: Anno
   } deriving (Show) 
+
+
+main :: IO ()
+
+-- definizione della funzione principale
+main = do
+
+  putStrLn("Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano")
+
+  -- acquisizione dei due anni 
+  putStrLn("Inserisci l'anno - tra il 1900 e il 2099 - per il Martedì Grasso")
+  primoAnno <- acquisisciAnno 
+  putStrLn("inserisci l'anno - tra il 1900 e il 2099 - per il Giovedì Grasso")
+  secondoAnno <- acquisisciAnno 
+
+  -- stampa della data del Martedì e Giovedì Grasso
+  putStrLn (formattaDataAscii (calcolaGiornoGrasso MartedìGrasso (calcoloPasqua primoAnno)))
+  putStrLn (formattaDataAscii (calcolaGiornoGrasso GiovedìGrasso (calcoloPasqua secondoAnno)))
+
+
 {- Funzione per formattare un numero tra 1-99 incluso per avere sempre due cifre:
  - l'argomento è un numero tra 1-99 incluso-}
 formattaADueCifre :: Int -> String
 formattaADueCifre n | n < 10 = "0" ++ show n 
                     | n > 99 || n < 0 = error $ show (n) ++ "il numero deve essere tra 0 e 99" 
                     | otherwise = show n
+
+
 {- Funzione per la creazione del tipo Data: 
  - il primo argomento è il giorno
  - il secondo argomento è il Mese
@@ -46,10 +71,12 @@ giorniDelMese Febbraio anno | controllaBisestile anno = 29
 giorniDelMese mese _ | mese == Aprile = 30
                      | mese == Marzo = 31                     
 
+
 {- Funzione che restituisce la data di Pasqua:
  - il primo argomento è l'anno -}
 calcoloPasqua :: Anno -> Calendario
 calcoloPasqua anno 
+
     -- Caso speciale 25 aprile -> 18 aprile
     | giorno == 25 && mese == Aprile && d == 28 && e == 6 && a > 10 = creaData 18 Aprile anno  
     -- Caso speciale 26 aprile -> 19 aprile
@@ -67,10 +94,13 @@ calcoloPasqua anno
         a = anno `mod` 19
         b = anno `mod` 4
         c = anno `mod` 7
+
+
 {- Funzione che restituisce se l'anno è bisestile:
  - l'argomento è l'anno da verificare -}
 controllaBisestile :: Anno -> Bool
 controllaBisestile anno = (anno `mod` 4 == 0 && anno `mod` 100 /= 0) || (anno `mod` 400 == 0)
+
 
 {- Funzione che calcola la data del Martedì o Giovedì grasso 
  - il primo argomento è il giorno grasso
@@ -79,6 +109,7 @@ calcolaGiornoGrasso :: GiornoGrasso -> Calendario -> Calendario
 calcolaGiornoGrasso giornoGrasso pasqua 
   | giornoGrasso == MartedìGrasso = sottraiGiorniDaData 47 pasqua
   | giornoGrasso == GiovedìGrasso = sottraiGiorniDaData 52 pasqua
+
 
 {- Funzione che calcola la sottrazione di giorni ad una data:
  - il primo argomento è il numero di giorno da sottrarre
@@ -97,6 +128,7 @@ sottraiGiorniDaData giorniScalare calendario
       giornoCorrente = (giorno calendario)
       meseCorrente = (mese calendario)
 
+
 {- Funzione che trasforma una data nella rappesentazione ASCII art:
  - l'argomento è una data -}
 formattaDataAscii :: Calendario -> String
@@ -114,6 +146,7 @@ formattaDataAscii giornoCalendario = unlines dataCombinata
         -- Combina cifre spazio e lettere insieme 
         dataCombinata =  foldl1 (zipWith(++)) $ giornoAscii ++ spazioTraGiornoMese ++ meseAscii
 
+
 acquisisciAnno :: IO Int 
 acquisisciAnno = do 
                 anno <- getLine 
@@ -123,6 +156,8 @@ acquisisciAnno = do
                   _ -> do 
                      putStrLn "Input non valido. L'anno deve essere tra 1900 e 2099."
                      acquisisciAnno
+
+
 {- Funzione per controllare che l'anno sia tra 1900-2099
  - l'argomento è l'anno -}
 controllaAnno :: Anno -> Bool
@@ -238,18 +273,3 @@ cifraInAsciiArt n | n == 0 = ["*****",
                               "*****"]
                   | otherwise = ["  ?  ", "  ?  ", "  ?  ", "  ?  ", "  ?  "]
 
-
-main :: IO ()
-
--- definizione della funzione principale
-main = do
-
-  putStrLn("Programma per il calcolo di Giovedì e Martedì Grasso secondo il calendario Gregoriano")
-  -- acquisizione dei due anni 
-  putStrLn("Inserisci l'anno per il Martedì Grasso")
-  primoAnno <- acquisisciAnno 
-  putStrLn("inserisci l'anno per il Giovedì Grasso")
-  secondoAnno <- acquisisciAnno 
-  -- stampa della data del Martedì e Giovedì Grasso
-  putStrLn (formattaDataAscii (calcolaGiornoGrasso MartedìGrasso (calcoloPasqua primoAnno)))
-  putStrLn (formattaDataAscii (calcolaGiornoGrasso GiovedìGrasso (calcoloPasqua secondoAnno)))
