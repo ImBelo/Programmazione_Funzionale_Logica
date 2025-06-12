@@ -324,7 +324,7 @@ stampa_riga(Index, [Lettera | Resto]) :-
 
 
 /* predicato che trasforma una data nella rappesentazione ASCII art:
-   l'argomento è una data 
+   l'argomento è una data.
 */
 stampa_caratteri_giganti(Giorno, Mese) :-
   Unita is Giorno // 10,
