@@ -55,8 +55,7 @@ controlla_anno(AnnoLetto, AnnoRestituire) :-
     between(1900, 2099, AnnoRestituire),
     AnnoRestituire = AnnoLetto.
 
-controlla_anno(AnnoLetto, AnnoRestituire) :-
-     \+ between(1900, 2099, AnnoRestituire),
+controlla_anno(_, AnnoRestituire) :-
      stampa_errore,
      acquisisci_anno(AnnoRestituire). 
 
