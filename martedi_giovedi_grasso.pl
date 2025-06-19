@@ -14,7 +14,6 @@ precedente(aprile, maggio).
 successivo(Mese1, Mese2):-
   precedente(Mese2, Mese1).
 
-
 /* 
 *  definizione del predicato principale
 */
@@ -30,7 +29,6 @@ programma :-
   stampa_caratteri_giganti(Giorno, Mese),
   data(GiornoG, MeseG, _) = GiovediGrasso,
   stampa_caratteri_giganti(GiornoG, MeseG).  
-
 
 /* predicato per acquisire l'anno dall'utente: 
    l'argomento è l'anno che rientra nei limiti definiti dalla regola controlla_anno
@@ -49,9 +47,8 @@ acquisisci_anno(AnnoScelto) :-
     )
   ).
 
-
 /* predicato per controllare l'anno:
-   gli utlimi due parametri indicano l'input inserito dall'utente
+   gli ultimi due parametri indicano l'input inserito dall'utente
    e l'anno da restituire.
 */
 controlla_anno(AnnoLetto, AnnoRestituire) :-  
@@ -63,7 +60,6 @@ controlla_anno(AnnoLetto, AnnoRestituire) :-
      stampa_errore,
      acquisisci_anno(AnnoRestituire). 
 
-
 /* predicati che calcolano la data del Martedì o Giovedì grasso:
    il primo argomento è il giorno grasso
    il secondo argomento è la data di pasqua dell'anno in cui si vuole calcolare i giorni grassi 
@@ -74,8 +70,7 @@ calcola_martedi_giovedi_grasso(martedi, Anno, MartediGrasso, _) :-
 calcola_martedi_giovedi_grasso(giovedi, Anno, _, GiovediGrasso) :-
     calcola_giovedi_grasso(Anno, GiovediGrasso). 
 
-/*
-   calcolo del martedi grasso
+/* calcolo del martedi grasso
    sottrae 47 giorni dalla data della pasqua
 */
 calcola_martedi_grasso(Anno, MartediGrasso) :-
@@ -88,7 +83,6 @@ calcola_martedi_grasso(Anno, MartediGrasso) :-
 calcola_giovedi_grasso(Anno, GiovediGrasso) :-
     pasqua(PGiorno, PMese, Anno),
     sottrai_giorni(52, data(PGiorno, PMese, Anno), GiovediGrasso).
-
 
 /* predicato che restituisce la data di Pasqua:
    gli argomenti sono il giorno, mese e anno */
@@ -116,7 +110,6 @@ pasqua(Giorno, Mese, Anno) :-
         Giorno = BaseG, Mese = BaseM
     ).
 
-
 /* predicati che calcolano la sottrazione di giorni ad una data:
    il primo argomento è il numero di giorno da sottrarre
    il secondo argomento è la data a cui sottrarre i giorni 
@@ -136,7 +129,6 @@ sottrai_giorni_caso(GiornoSufficiente, data(Giorno, Mese, Anno), Sottraendo, Dat
     NuovoGiorno is Giorno - Sottraendo + MaxGiorni,
     sottrai_giorni(0, data(NuovoGiorno, NuovoMese, Anno), DataArrivo).
 
-
 /* predicati che restituiscono quanti giorno ci sono in un dato mese:
    il primo argomento è il giorno
    il secondo argomento è il mese
@@ -147,7 +139,6 @@ giorni_del_mese(29, febbraio, Anno) :- controlla_bisestile(Anno).
 giorni_del_mese(31, Mese, _) :- Mese = marzo.
 giorni_del_mese(30, Mese, _) :- Mese = aprile.
 
-
 /* predicato per controllare che l'anno sia bisestile:
    l'argomento è l'anno 
 */
@@ -155,8 +146,7 @@ controlla_bisestile(Anno) :-
     (Anno mod 400 =:= 0; 
      (Anno mod 100 =\= 0, Anno mod 4 =:= 0)).
 
-
-/* predicato che crea una data composta da Giorno, Mese e Anno
+/* predicato che crea una data composta da giorno, mese e anno
 */
 crea_data(Giorno, Mese, Anno) :-
     integer(Anno), Anno >= 1900, Anno =< 2099,  
@@ -175,7 +165,6 @@ stampa_caratteri_giganti(Giorno, Mese) :-
   giorno_ascii(Decina, DecinaCodificata),
   mese_ascii(Mese, MeseCodificato),
   stampa_gigante([UnitaCodificata, DecinaCodificata], MeseCodificato).
-
 
 /* predicato che restituisce ASCII art di una cifra:
    l'argomento è la cifra da cui prendere l'ASCII art 
@@ -240,7 +229,6 @@ giorno_ascii(9, ['*****',
                  '    *',
                  '*****']).
 
-
 /* predicato che converte Mese nella sua rappresentazione ASCII art:
    il primo argomento è il mese da cui prendere l'ASCII art 
    il secondo argomento è il mese codificato in ASCII art
@@ -293,7 +281,6 @@ mese_ascii(aprile, [['*****',
                      '*  * ',
                      '*   *']]).
     
-
 /* predicato per controllare l'anno
    il primo argomento è l'anno da controllare,
    il secondo argomento è l'anno 
@@ -301,7 +288,6 @@ mese_ascii(aprile, [['*****',
 stampa_errore :-
   write('Input non valido. L''anno deve essere tra il 1900 e il 2099 compresi.\n').
    
-
 /* predicato per stampare caratteri in formato gigante:
    il primo argomento è la lista dei caratteri della prima parola,
    il secondo argomento è la lista dei caratteri della seconda parola
@@ -310,7 +296,6 @@ stampa_errore :-
 stampa_gigante(Caratteri1, Caratteri2) :-
   stampa_righe_giganti(0, Caratteri1, Caratteri2).
 
-
 /* predicato ricorsivo per stampare righe di caratteri giganti:
    il primo argomento è l'indice della riga corrente (0-4),
    il secondo argomento è la lista dei caratteri della prima parola,
@@ -318,7 +303,6 @@ stampa_gigante(Caratteri1, Caratteri2) :-
    caso base: quando raggiunge la 5a riga (indice 5) termina con cut (!)
 */
 stampa_righe_giganti(5, _, _) :- !.
-
 
 /* caso ricorsivo per stampare una riga di caratteri giganti:
    il primo argomento è l'indice della riga corrente,
