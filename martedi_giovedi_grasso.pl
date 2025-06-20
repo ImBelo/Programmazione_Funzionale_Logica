@@ -47,7 +47,7 @@ acquisisci_anno(AnnoScelto) :-
     )
   ).
 
-/* predicato per controllare l'anno:
+/* predicati per controllare l'anno:
    gli ultimi due parametri indicano l'input inserito dall'utente
    e l'anno da restituire.
 */
@@ -165,7 +165,7 @@ stampa_caratteri_giganti(Giorno, Mese) :-
   mese_ascii(Mese, MeseCodificato),
   stampa_gigante([UnitaCodificata, DecinaCodificata], MeseCodificato).
 
-/* predicato che restituisce ASCII art di una cifra:
+/* predicati che restituiscono ASCII art di una cifra:
    l'argomento è la cifra da cui prendere l'ASCII art 
 */
 giorno_ascii(0, ['*****',
@@ -228,7 +228,7 @@ giorno_ascii(9, ['*****',
                  '    *',
                  '*****']).
 
-/* predicato che converte Mese nella sua rappresentazione ASCII art:
+/* predicati che convertono Mese nella sua rappresentazione ASCII art:
    il primo argomento è il mese da cui prendere l'ASCII art 
    il secondo argomento è il mese codificato in ASCII art
 */
