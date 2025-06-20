@@ -128,7 +128,7 @@ sottrai_giorni_caso(GiornoSufficiente, data(Giorno, Mese, Anno), Sottraendo, Dat
     NuovoGiorno is Giorno - Sottraendo + MaxGiorni,
     sottrai_giorni(0, data(NuovoGiorno, NuovoMese, Anno), DataArrivo).
 
-/* predicati che restituiscono quanti giorno ci sono in un dato mese:
+/* predicati che restituiscono quanti giorni ci sono in un dato mese:
    il primo argomento è il giorno
    il secondo argomento è il mese
    il terzo argomento è l'anno (importante per Febbraio) 
